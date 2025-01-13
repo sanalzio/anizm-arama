@@ -1,0 +1,7 @@
+:root{
+    --logoFilter: hue-rotate(170deg) contrast(2) brightness(0.7);
+
+    --primaryColor: #408ba0;
+    --primaryColorDarker: #2e7b91;
+    --primaryColorLighter: #53a4c8;
+}
