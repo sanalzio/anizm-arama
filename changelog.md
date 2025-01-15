@@ -1,3 +1,6 @@
+# 1.1.3
+- Header logo genişliği düzeltmesi. (`src/styles/main.css` satır 111)
+
 # 1.1.2
 - Footer için küçük bir değişiklik. (`src/index.html` satır 72-88)
 

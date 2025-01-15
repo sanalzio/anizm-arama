@@ -108,6 +108,7 @@ header{
     float: left;
     display: inline;
     margin-right: 0.75rem;
+    flex: 0;
 
     /* filter: var(--logoFilter); */
 
