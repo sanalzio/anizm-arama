@@ -1,3 +1,6 @@
+# 1.1.2
+- Footer için küçük bir değişiklik. (`src/index.html` satır 72-88)
+
 # 1.1.1
 - `src/script.js` için küçük bir değişiklik. (satır 215)
 
