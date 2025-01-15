@@ -1,3 +1,6 @@
+# 1.1.1
+- `src/script.js` için küçük bir değişiklik. (satır 215)
+
 # 1.1.0
 - Telefonlar için iyileştirmeler yapıldı.
 - Logo ve simgeler için anizm'e bağlılık giderildi.

@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (params.get("hostname")) {
         hostname = params.get("hostname");
-        logoBtn.href = hostname;
+        logoBtn.href = "https://" + hostname;
     }
 
 
