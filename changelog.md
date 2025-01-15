@@ -1,3 +1,6 @@
+# 1.2.2
+- Aptalca bir hatanın düzeltilmesi.
+
 # 1.2.1
 - Otomatik arama çubuğuna odaklanma sistemi eklendi.
 

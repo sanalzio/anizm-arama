@@ -216,8 +216,6 @@ queryInput.addEventListener("keypress", function (event) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    queryInput.focus();
-
     if (location.hash.length > 0) {
         switchTheme(location.hash.slice(7));
     }
@@ -232,6 +230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     json = await req.json();
 
     if (params.get("q")) {
+
         const query = decodeURI(params.get("q"));
 
         queryInput.value = query;
@@ -241,8 +240,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             showMessage("En az 3 karakterli bir arama yapınız.");
         }
+
     } else {
+
+        queryInput.focus();
         showMessage("Aramaya başlayın...");
+
     }
 
 });
