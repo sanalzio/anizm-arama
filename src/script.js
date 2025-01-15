@@ -7,11 +7,23 @@ var json;
 var params = new URL(location.href).searchParams;
 var hostname = "anizm.net";
 
-const favicon = {
-    orange: "./assets/orange.ico",
-    green: "./assets/green.png",
-    blue: "./assets/blue.png",
-    pink: "./assets/pink.png"
+const faviconPath = {
+    orange: "./assets/favicon/orange.ico",
+    green: "./assets/favicon/green.png",
+    blue: "./assets/favicon/blue.png",
+    pink: "./assets/favicon/pink.png"
+}
+const logoPath = {
+    orange: "./assets/logo/orange.webp",
+    green: "./assets/logo/green.webp",
+    blue: "./assets/logo/blue.webp",
+    pink: "./assets/logo/pink.webp"
+}
+const logoSmallPath = {
+    orange: "./assets/icon/orange.png",
+    green: "./assets/icon/green.png",
+    blue: "./assets/icon/blue.png",
+    pink: "./assets/icon/pink.png"
 }
 
 
@@ -33,6 +45,10 @@ const shortQueryWarning = document.getElementById("short-query");
 const resultsContainer = document.getElementById("results-container");
 
 const faviconLink = document.getElementById("favicon");
+const logoImg = document.getElementById("logo");
+const logoSmallImg = document.getElementById("logo-small");
+
+const logoBtn = document.getElementById("logo-btn");
 
 
 /* -- Elements -- */
@@ -105,7 +121,10 @@ function switchTheme(themeId) {
         return;
     }
 
-    faviconLink.href = favicon[themeId];
+    faviconLink.href = faviconPath[themeId];
+    logoImg.src = logoPath[themeId];
+    logoSmallImg.src = logoSmallPath[themeId];
+
     themeSelect.value = themeId
     themeLink.href = `styles/${themeId}_theme.css`;
 }
@@ -187,16 +206,18 @@ queryInput.addEventListener("keypress", function (event) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    req = await fetch("https://anizm.net/getAnimeListForSearch");
-    json = await req.json();
-
     if (location.hash.length > 0) {
         switchTheme(location.hash.slice(7));
     }
 
     if (params.get("hostname")) {
         hostname = params.get("hostname");
+        logoBtn.href = hostname;
     }
+
+
+    req = await fetch("https://anizm.net/getAnimeListForSearch");
+    json = await req.json();
 
     if (params.get("q")) {
         const query = decodeURI(params.get("q"));

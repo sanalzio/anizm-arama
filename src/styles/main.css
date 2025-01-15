@@ -6,6 +6,7 @@ a {
 }
 
 ::selection{
+    color: light-dark(#222222, #dddddd);
     background-color: light-dark(var(--primaryColorLighter), var(--primaryColor));
 }
 
@@ -106,11 +107,13 @@ header{
 #logo-btn{
     float: left;
     display: inline;
-    margin-right: 1rem;
+    margin-right: 0.75rem;
 
-    filter: var(--logoFilter);
+    /* filter: var(--logoFilter); */
 
-    #logo{
+    #logo-small { display: none; }
+
+    #logo, #logo-small {
         height: 100%;
     }
 }
@@ -159,6 +162,7 @@ select{
 
     display: inline-flex;
     margin-right: 0.5rem;
+    margin-left: 0.75rem;
 
     #theme-ico{
         width: 2rem;
@@ -210,7 +214,7 @@ option[value="pink"]{
     padding-left: 0.5rem;
     font-size: 1.5rem;
     border: none;
-    width: 70%;
+    width: 80%;
     box-sizing: border-box;
 
     caret-color: var(--primaryColor);
@@ -311,12 +315,6 @@ footer{
     flex: 1;
 }
 
-@media (min-width: 0px) and (max-width: 550px) {
-    #results-container {
-        padding: 4.5rem 5% 0 5% !important;
-    }
-}
-
 
 .result-card{
     display: inline-flex;
@@ -370,6 +368,7 @@ footer{
         display: inline-flex;
         flex-direction: column;
         justify-content: start;
+        overflow-y: auto;
         height: 11rem;
 
         * {margin: 0;}
@@ -383,9 +382,10 @@ footer{
 
         .card-other-titles-container{
             margin-bottom: 0.1rem;
+            font-weight: 600;
+            color: light-dark(var(--primaryColorDarker), var(--primaryColor));
 
             .card-other-titles-label{
-                font-weight: 600;
 
                 color: light-dark(var(--primaryColor), var(--primaryColorDarker));
             }
@@ -393,7 +393,6 @@ footer{
 
         .card-synopsis{
             font-size: 0.8rem !important;
-            overflow-y: auto;
             font-size: 1rem;
         }
     }
@@ -402,3 +401,28 @@ footer{
 
 
 /* -- Cards -- */
+
+
+
+
+/* -- Media -- */
+
+
+
+@media (min-width: 0px) and (max-width: 550px) {
+    #results-container {
+        padding: 4.5rem 5% 0 5% !important;
+    }
+
+    #query {
+        width: 100%;
+    }
+
+    #logo { display: none; }
+    #logo-small { display: inline!important; }
+
+    ::-webkit-scrollbar { width: 5px; }
+}
+
+
+/* -- Media -- */
