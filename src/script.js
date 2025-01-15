@@ -216,6 +216,8 @@ queryInput.addEventListener("keypress", function (event) {
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    queryInput.focus();
+
     if (location.hash.length > 0) {
         switchTheme(location.hash.slice(7));
     }

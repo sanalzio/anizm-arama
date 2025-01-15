@@ -1,3 +1,6 @@
+# 1.2.1
+- Otomatik arama çubuğuna odaklanma sistemi eklendi.
+
 # 1.2.0
 - "Aramaya başlayın..." ve "Sonuç bulunamadı." mesajları eklendi.
 - Karanlık temada seçim renkleri düzeltmesi yapldı.
