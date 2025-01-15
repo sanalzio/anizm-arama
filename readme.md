@@ -4,7 +4,7 @@
 > Bu proje gayriresmi bir projedir. Açık kaynak kodlu geliştirilen bir projedir. Ticari kullanımı yasaktır.
 
 > [!NOTE]
-> Telefonlarda biraz sorunlu olduğunu fark ettim düzeltmeye çalışacağım. Farkındayım JavaScript kodu pek temiz değil temizlemeye çalışacağım.
+> Farkındayım JavaScript kodu pek temiz değil temizlemeye çalışacağım.
 
 - [Anizm arama](#anizm-arama)
   - [Ne bu?](#ne-bu)

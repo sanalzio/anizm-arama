@@ -41,7 +41,7 @@ const themeSelect = document.getElementById("theme-select");
 const searchBtn = document.getElementById("search-btn");
 const queryInput = document.getElementById("query");
 
-const shortQueryWarning = document.getElementById("short-query");
+const messageElement = document.getElementById("message");
 const resultsContainer = document.getElementById("results-container");
 
 const faviconLink = document.getElementById("favicon");
@@ -59,25 +59,32 @@ const logoBtn = document.getElementById("logo-btn");
 /* -- Functions -- */
 
 
-var decodeEntities = (function() {
+function showMessage(message) {
+    resultsContainer.style.display = "none";
 
-    var element = document.createElement('div');
-  
-    function decodeHTMLEntities (str) {
-      if(str && typeof str === 'string') {
+    messageElement.innerHTML = message;
 
-        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-        element.innerHTML = str;
-        str = element.textContent;
-        element.textContent = '';
-      }
-  
-      return str;
+    messageElement.style.display = "block";
+}
+
+
+var decodeEntities = (function () {
+    var element = document.createElement("div");
+
+    function decodeHTMLEntities(str) {
+        if (str && typeof str === "string") {
+            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gim, "");
+            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gim, "");
+            element.innerHTML = str;
+            str = element.textContent;
+            element.textContent = "";
+        }
+
+        return str;
     }
-  
+
     return decodeHTMLEntities;
-  })();
+})();
 
 
 function generateCard(animeJson) {
@@ -156,7 +163,10 @@ function search(query) {
                     .includes(query))
     );
 
-    printCards(matchedAnimes);
+    if (matchedAnimes.length > 0)
+        printCards(matchedAnimes);
+    else
+        showMessage("Sonuç bulunamadı.");
 
 }
 
@@ -227,9 +237,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (query.length > 2)
             search(query.toLowerCase());
         else {
-            resultsContainer.style.display = "none";
-            shortQueryWarning.style.display = "block";
+            showMessage("En az 3 karakterli bir arama yapınız.");
         }
+    } else {
+        showMessage("Aramaya başlayın...");
     }
 
 });

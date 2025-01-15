@@ -1,3 +1,7 @@
+# 1.2.0
+- "Aramaya başlayın..." ve "Sonuç bulunamadı." mesajları eklendi.
+- Karanlık temada seçim renkleri düzeltmesi yapldı.
+
 # 1.1.3
 - Header logo genişliği düzeltmesi. (`src/styles/main.css` satır 111)
 
