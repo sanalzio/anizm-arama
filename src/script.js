@@ -226,17 +226,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    req = await fetch("https://anizm.net/getAnimeListForSearch");
-    json = await req.json();
-
     if (params.get("q")) {
 
         const query = decodeURI(params.get("q"));
 
         queryInput.value = query;
 
-        if (query.length > 2)
+        if (query.length > 2) {
+
+            req = await fetch("https://anizm.net/getAnimeListForSearch");
+            json = await req.json();
+
             search(query.toLowerCase());
+
+        }
         else {
             showMessage("En az 3 karakterli bir arama yapınız.");
         }

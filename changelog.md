@@ -1,3 +1,6 @@
+# 1.2.3
+- İşlem önceliği sıralaması. (`src/script.js`)
+
 # 1.2.2
 - Aptalca bir hatanın düzeltilmesi.
 
