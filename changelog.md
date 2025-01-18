@@ -1,3 +1,6 @@
+# 1.3.0
+- "Yükleniyor..." ve "Aranıyor..." mesajları eklendi.
+
 # 1.2.3
 - İşlem önceliği sıralaması. (`src/script.js`)
 

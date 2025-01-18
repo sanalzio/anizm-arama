@@ -294,13 +294,38 @@ footer{
 /* -- Short query warning text -- */
 
 
-#message{
+#message-container{
     margin: auto;
     margin-top: calc(50vh - 3.5rem);
-    display: none;
+    /* display: none; */
 
     color: light-dark(var(--primaryColor), var(--primaryColorDarker));
     font-size: x-large;
+}
+
+#message {
+    margin: 0;
+    display: inline-block;
+}
+
+#loader-icon{
+    display: inline-block;
+    width: 1.5rem;
+    margin-top: -0.25rem;
+    vertical-align: middle;
+    /* display: none; */
+
+    animation: loader-spin 250ms linear 0s infinite normal none;
+}
+
+
+@keyframes loader-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -314,7 +339,7 @@ footer{
 
 #results-container {
     display: flex;
-    /* display: none; */
+    display: none;
     flex-direction: column;
     padding: 4.5rem 30% 0 7%;
     flex: 1;

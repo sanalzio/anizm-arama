@@ -1,7 +1,6 @@
 /* -- Globals -- */
 
 
-var req;
 var json;
 
 var params = new URL(location.href).searchParams;
@@ -41,7 +40,9 @@ const themeSelect = document.getElementById("theme-select");
 const searchBtn = document.getElementById("search-btn");
 const queryInput = document.getElementById("query");
 
+const messageContainer = document.getElementById("message-container");
 const messageElement = document.getElementById("message");
+const loaderIcon = document.getElementById("loader-icon");
 const resultsContainer = document.getElementById("results-container");
 
 const faviconLink = document.getElementById("favicon");
@@ -59,12 +60,17 @@ const logoBtn = document.getElementById("logo-btn");
 /* -- Functions -- */
 
 
-function showMessage(message) {
+function showMessage(message, loader=false) {
     resultsContainer.style.display = "none";
 
     messageElement.innerHTML = message;
 
-    messageElement.style.display = "block";
+    if (loader)
+        loaderIcon.style.display = "inline-block";
+    else
+        loaderIcon.style.display = "none";
+
+    messageContainer.style.display = "inline-block";
 }
 
 
@@ -120,6 +126,12 @@ function generateCard(animeJson) {
 }
 
 
+function showResults() {
+    messageContainer.style.display = "none";
+    resultsContainer.style.display = "flex";
+}
+
+
 function switchTheme(themeId) {
     if ( themeId != "blue" &&
     themeId != "green" &&
@@ -138,10 +150,14 @@ function switchTheme(themeId) {
 
 
 function printCards(matchedAnimes) {
+
     for (let i = 0; i < matchedAnimes.length; i++) {
         const animeJson = matchedAnimes[i];
         resultsContainer.innerHTML += generateCard(animeJson);
     }
+
+    showResults();
+
 }
 
 
@@ -234,7 +250,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (query.length > 2) {
 
-            req = await fetch("https://anizm.net/getAnimeListForSearch");
+            showMessage("Aranıyor...", true);
+
+            const req = await fetch("https://anizm.net/getAnimeListForSearch");
             json = await req.json();
 
             search(query.toLowerCase());
