@@ -96,6 +96,7 @@ var decodeEntities = (function () {
 function generateCard(animeJson) {
 
     let otherNames = (animeJson['info_othernames'] || "-").trim();
+    otherNames = (otherNames == "-" || !otherNames) ? animeJson['info_japanese'] : otherNames + ", " + animeJson['info_japanese'];
 
 
     let decodedSummary = decodeEntities(animeJson['info_summary']);
@@ -118,7 +119,7 @@ function generateCard(animeJson) {
         <a href="https://${hostname}/${animeJson['info_slug']}" class="card-title">${animeJson['info_title']}</a>
         <p class="card-other-titles-container">
             <span class="card-other-titles-label">Diğer isimler:</span>
-            <span class="card-other-titles">${otherNames.length > 0 ? otherNames : "-"}</span>
+            <span class="card-other-titles">${otherNames && otherNames.length > 0 ? otherNames : "-"}</span>
         </p>
         <p class="card-synopsis">${synopsis}</p>
     </div>
@@ -175,6 +176,10 @@ function search(query) {
                     .includes(query)) ||
             (anime.info_othernames &&
                 anime.info_othernames
+                    .toLowerCase()
+                    .includes(query)) ||
+            (anime.info_japanese &&
+                anime.info_japanese
                     .toLowerCase()
                     .includes(query))
     );
@@ -243,8 +248,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     if (params.get("q")) {
-
+        
         const query = decodeURI(params.get("q"));
+
+        document.title = query + " - Anizm arama";
 
         queryInput.value = query;
 

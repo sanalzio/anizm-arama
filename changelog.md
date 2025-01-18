@@ -1,3 +1,8 @@
+# 1.4.0
+- "Diğer isimler" bölümüne japonca isimler eklendi.
+- Arama işlevine japonca isme göre arama işlevi eklendi.
+- Arama sayfasının başlığını değiştirme işlevi eklendi. (`src/script.js` satır 254)
+
 # 1.3.0
 - "Yükleniyor..." ve "Aranıyor..." mesajları eklendi.
 
