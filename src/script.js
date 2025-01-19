@@ -94,37 +94,45 @@ var decodeEntities = (function () {
 
 
 function generateCard(animeJson) {
+    const {
+        info_othernames,
+        info_japanese,
+        info_summary,
+        info_slug,
+        info_poster,
+        info_year,
+        info_malpoint,
+        info_title
+    } = animeJson;
 
-    let otherNames = (animeJson['info_othernames'] || "-").trim();
-    otherNames = (otherNames == "-" || !otherNames) ? animeJson['info_japanese'] : otherNames + ", " + animeJson['info_japanese'];
+    const otherNames = info_othernames?.trim() || "-";
+    const displayOtherNames = (otherNames === "-" ? info_japanese : `${otherNames}, ${info_japanese}`) || "-";
 
-
-    let decodedSummary = decodeEntities(animeJson['info_summary']);
-    let synopsis = decodedSummary.match(/(?<=>)[^<]+/g);
-    synopsis = synopsis ? synopsis.join(" ") : decodedSummary;
-
+    const decodedSummary = decodeEntities(info_summary || "");
+    const synopsis = (decodedSummary.match(/(?<=>)[^<]+/g)?.join(" ") || decodedSummary).trim();
 
     return `
 <div class="result-card">
     <div class="card-left">
-        <a href="https://${hostname}/${animeJson['info_slug']}">
-            <img width="255px" height="321px" class="card-poster" src="https://anizm.net/storage/pcovers/${animeJson['info_poster']}" alt="${animeJson['info_slug']}-poster">
+        <a href="https://${hostname}/${info_slug}">
+            <img width="255px" height="321px" class="card-poster" src="https://anizm.net/storage/pcovers/${info_poster}" alt="${info_slug}-poster">
         </a>
         <div class="card-left-under">
-            <span class="card-year">${animeJson['info_year']}</span>
-            <span class="card-mal-score">${(animeJson['info_malpoint'] || "-").toString()}</span>
+            <span class="card-year">${info_year || "-"}</span>
+            <span class="card-mal-score">${info_malpoint?.toString() || "-"}</span>
         </div>
     </div>
     <div class="card-details">
-        <a href="https://${hostname}/${animeJson['info_slug']}" class="card-title">${animeJson['info_title']}</a>
+        <a href="https://${hostname}/${info_slug}" class="card-title">${info_title}</a>
         <p class="card-other-titles-container">
             <span class="card-other-titles-label">Diğer isimler:</span>
-            <span class="card-other-titles">${otherNames && otherNames.length > 0 ? otherNames : "-"}</span>
+            <span class="card-other-titles">${displayOtherNames}</span>
         </p>
         <p class="card-synopsis">${synopsis}</p>
     </div>
 </div>`;
 }
+
 
 
 function showResults() {

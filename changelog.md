@@ -1,3 +1,6 @@
+# 1.4.3
+- JavaScript kodunda `generateCard` fonksiyonu optimize edildi.
+
 # 1.4.2
 - Telefon ve tablet için düzenlemeler yapıldı.
 - Arama süresini azaltmak için Japonca isim ile arama işlemi devre dışı bırakıldı.
