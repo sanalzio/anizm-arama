@@ -114,12 +114,13 @@ header{
 
     /* filter: var(--logoFilter); */
 
-    #logo-small { display: none; }
-
     #logo, #logo-small {
+        display: inline-block;
         height: 2rem;
         max-height: 2rem;
     }
+
+    #logo-small { display: none; }
 }
 
 /* - Logo - */
@@ -458,8 +459,8 @@ footer{
 
 @media (min-width: 0px) and (max-width: 550px) {
 
-    #logo { display: none; }
-    #logo-small { display: inline!important; }
+    #logo { display: none !important; }
+    #logo-small { display: inline-block !important; }
 
     ::-webkit-scrollbar { width: 5px; }
 }

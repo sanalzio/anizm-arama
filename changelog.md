@@ -1,3 +1,6 @@
+# 1.5.1
+- Telefon için düzeltmeler.
+
 # 1.5.0
 - Fazlalık arama sonucu kartlarını kaydırdıkça yükleme sistemi getirildi.
 - Html dili `"tr"` olarak değiştirildi. (satır 2)
