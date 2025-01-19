@@ -3,6 +3,8 @@
 
 var json;
 
+let overflowAnimeJsons = [];
+
 var params = new URL(location.href).searchParams;
 var hostname = "anizm.net";
 
@@ -50,6 +52,8 @@ const logoImg = document.getElementById("logo");
 const logoSmallImg = document.getElementById("logo-small");
 
 const logoBtn = document.getElementById("logo-btn");
+
+const html = document.documentElement;
 
 
 /* -- Elements -- */
@@ -192,8 +196,17 @@ function search(query) {
                     .includes(query)) */
     );
 
-    if (matchedAnimes.length > 0)
-        printCards(matchedAnimes);
+    if (matchedAnimes.length > 0) {
+
+        if (matchedAnimes.length > 7) {
+            printCards(matchedAnimes.slice(0,7));
+            overflowAnimeJsons = matchedAnimes.slice(7);
+        }
+
+        else
+            printCards(matchedAnimes);
+
+    }
     else
         showMessage("Sonuç bulunamadı.");
 
@@ -231,9 +244,32 @@ searchBtn.addEventListener("click", () => {
 queryInput.addEventListener("keypress", function (event) {
 
     if (event.key === "Enter") {
+
         event.preventDefault();
 
         searchBtn.click();
+    }
+});
+
+
+window.addEventListener("scroll", () => {
+
+    if (overflowAnimeJsons.length > 0 && html.offsetHeight + html.scrollTop >= html.scrollHeight) {
+
+        if (overflowAnimeJsons.length > 7) {
+
+            printCards(overflowAnimeJsons.slice(0,7));
+            overflowAnimeJsons = overflowAnimeJsons.slice(7);
+
+        }
+
+        else {
+
+            printCards(overflowAnimeJsons);
+            overflowAnimeJsons = {};
+
+        }
+
     }
 });
 

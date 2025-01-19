@@ -52,7 +52,10 @@ html{
 body{
     box-sizing: border-box;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 
     margin: 0;
 

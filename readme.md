@@ -12,7 +12,7 @@
   - [Bunu yapmak için iznin var mı?](#bunu-yapmak-için-iznin-var-mı)
   - [Nasıl kullanırım?](#nasıl-kullanırım)
   - [Dur bekle! Gizli bir özelliğim var.](#dur-bekle-gizli-bir-özelliğim-var)
-- [Lisans: CC BY-NC](#lisans-cc-by-nc)
+- [Lisans: CC BY-NC 4.0](#lisans-cc-by-nc-40)
 
 
 ## Ne bu?
@@ -37,4 +37,4 @@ Geçenlerde anizm sitesinin `anizm.net` dışında `anizle.com` domaini'de oldu�
 
 [`/index.html?hostname=anizle.com&q=Another`](https://sanalzio.github.io/anizm-arama/src/index.html?hostname=anizle.com&q=Another) gibi.
 
-# Lisans: CC BY-NC
+# Lisans: CC BY-NC 4.0

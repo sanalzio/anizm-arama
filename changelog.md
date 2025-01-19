@@ -1,3 +1,8 @@
+# 1.5.0
+- Fazlalık arama sonucu kartlarını kaydırdıkça yükleme sistemi getirildi.
+- Html dili `"tr"` olarak değiştirildi. (satır 2)
+- Tema seçili değilken favicon gözükmeme hatası giderildi. (satır 14)
+
 # 1.4.3
 - JavaScript kodunda `generateCard` fonksiyonu optimize edildi.
 
