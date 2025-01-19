@@ -177,11 +177,11 @@ function search(query) {
             (anime.info_othernames &&
                 anime.info_othernames
                     .toLowerCase()
-                    .includes(query)) ||
+                    .includes(query))/*  ||
             (anime.info_japanese &&
                 anime.info_japanese
                     .toLowerCase()
-                    .includes(query))
+                    .includes(query)) */
     );
 
     if (matchedAnimes.length > 0)

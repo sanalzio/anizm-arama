@@ -399,6 +399,7 @@ footer{
         flex-direction: column;
         justify-content: start;
         overflow-y: auto;
+        overflow-x: hidden;
         height: 11rem;
 
         * {margin: 0;}
@@ -439,7 +440,7 @@ footer{
 
 
 
-@media (min-width: 0px) and (max-width: 600px) {
+@media (min-width: 0px) and (max-width: 720px) {
 
     #results-container {
         padding: 4.5rem 5% 0 5% !important;

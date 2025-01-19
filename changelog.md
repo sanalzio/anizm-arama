@@ -1,3 +1,7 @@
+# 1.4.2
+- Telefon ve tablet için düzenlemeler yapıldı.
+- Arama süresini azaltmak için Japonca isim ile arama işlemi devre dışı bırakıldı.
+
 # 1.4.1
 - Telefon için iyileştirmeler denendi.
 - JavaScript tarafında işlem önceliği ayarlandı.
