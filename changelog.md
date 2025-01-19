@@ -1,3 +1,7 @@
+# 1.4.1
+- Telefon için iyileştirmeler denendi.
+- JavaScript tarafında işlem önceliği ayarlandı.
+
 # 1.4.0
 - "Diğer isimler" bölümüne japonca isimler eklendi.
 - Arama işlevine japonca isme göre arama işlevi eklendi.

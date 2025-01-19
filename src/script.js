@@ -247,7 +247,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    if (params.get("q")) {
+    if (!params.get("q")) {
+
+        queryInput.focus();
+        showMessage("Aramaya başlayın...");
+
+    } else {
         
         const query = decodeURI(params.get("q"));
 
@@ -268,11 +273,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         else {
             showMessage("En az 3 karakterli bir arama yapınız.");
         }
-
-    } else {
-
-        queryInput.focus();
-        showMessage("Aramaya başlayın...");
 
     }
 
