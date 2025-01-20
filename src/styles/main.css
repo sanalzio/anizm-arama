@@ -2,7 +2,7 @@
 /* -- General -- */
 
 a {
-    color: light-dark(var(--primaryColor), var(--primaryColorDarker));
+    color: light-dark(var(--primaryColorDarker), var(--primaryColor));
 }
 
 ::selection{
@@ -74,6 +74,7 @@ body{
 
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     width: 100%;
     min-height: 100vh;
@@ -102,6 +103,8 @@ header{
     margin-bottom: 1rem;
     box-sizing: border-box;
     overflow: visible;
+
+    z-index: 2;
 }
 
 
@@ -237,7 +240,7 @@ option[value="pink"]{
 
     background: light-dark(var(--themeDarkerBgColorLight), var(--themeBgColor));
 
-    color: var(--primaryColor);
+    color: light-dark(var(--primaryColorLighter), var(--primaryColor));
 
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
@@ -285,12 +288,31 @@ footer{
 
     #license{
         font-weight: 600;
-        color: light-dark(var(--primaryColor), var(--primaryColorDarker));
+        color: light-dark(var(--primaryColorDarker), var(--primaryColor));
     }
 }
 
 
 /* -- Footer -- */
+
+
+
+
+/* -- Results count --*/
+
+
+#results-count-p {
+    position: absolute;
+    margin: 3.5rem 0 0 0.5rem;
+    z-index: 1;
+
+    color: light-dark(var(--resultsCountTextLight), var(--resultsCountTextDark));
+
+    display: none;
+}
+
+
+/* -- Results count --*/
 
 
 
@@ -303,7 +325,7 @@ footer{
     margin-top: calc(50vh - 3.5rem);
     /* display: none; */
 
-    color: light-dark(var(--primaryColor), var(--primaryColorDarker));
+    color: light-dark(var(--primaryColorDarker), var(--primaryColor));
     font-size: x-large;
 }
 
@@ -345,7 +367,7 @@ footer{
     display: flex;
     display: none;
     flex-direction: column;
-    padding: 4.5rem 30% 0 7%;
+    padding: 5rem 30% 0 7%;
     flex: 1;
 }
 
@@ -421,8 +443,8 @@ footer{
             color: light-dark(var(--primaryColorDarker), var(--primaryColor));
 
             .card-other-titles-label{
-
-                color: light-dark(var(--primaryColor), var(--primaryColorDarker));
+                font-weight: 400;
+                color: light-dark(var(--primaryColorDarker), var(--primaryColor));
             }
         }
 
@@ -447,7 +469,7 @@ footer{
 @media (min-width: 0px) and (max-width: 720px) {
 
     #results-container {
-        padding: 4.5rem 5% 0 5% !important;
+        padding: 5rem 5% 0 5% !important;
     }
 
     #query {

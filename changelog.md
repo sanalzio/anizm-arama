@@ -1,3 +1,7 @@
+# 1.6.0
+- Tema renk ayarlamaları yapıldı.
+- Arama sonuç sayısı göstergesi sistemi eklendi.
+
 # 1.5.1
 - Telefon için düzeltmeler.
 

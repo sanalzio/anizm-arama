@@ -47,6 +47,9 @@ const messageElement = document.getElementById("message");
 const loaderIcon = document.getElementById("loader-icon");
 const resultsContainer = document.getElementById("results-container");
 
+const resultsCountP = document.getElementById("results-count-p");
+const resultsCount = document.getElementById("results-count");
+
 const faviconLink = document.getElementById("favicon");
 const logoImg = document.getElementById("logo");
 const logoSmallImg = document.getElementById("logo-small");
@@ -196,9 +199,15 @@ function search(query) {
                     .includes(query)) */
     );
 
-    if (matchedAnimes.length > 0) {
 
-        if (matchedAnimes.length > 7) {
+    let matchedAnimesLength = matchedAnimes.length;
+
+    if (matchedAnimesLength > 0) {
+
+        resultsCount.innerHTML = matchedAnimesLength;
+        resultsCountP.style.display = "block";
+
+        if (matchedAnimesLength > 7) {
             printCards(matchedAnimes.slice(0,7));
             overflowAnimeJsons = matchedAnimes.slice(7);
         }

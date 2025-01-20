@@ -28,4 +28,7 @@
     --themeBgColorLight: rgb(225, 225, 225);
     --themeSecondaryBgColorLight: rgb(205, 205, 205);
     --themeDarkerBgColorLight: rgb(175, 175, 175);
+
+    --resultsCountTextDark: rgb(130, 130, 130);
+    --resultsCountTextLight: rgb(105, 105, 105);
 }
