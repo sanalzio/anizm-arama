@@ -1,3 +1,6 @@
+# 1.6.2
+- Tema seçeneklerinin isimleri değiştirildi. (`src/index.html` 52 - 55 satırları)
+
 # 1.6.1
 - Gereksiz durumlarda footer'u gizleme sistemi getirildi.
 
