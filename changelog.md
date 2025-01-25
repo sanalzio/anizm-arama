@@ -1,3 +1,6 @@
+# 1.6.1
+- Gereksiz durumlarda footer'u gizleme sistemi getirildi.
+
 # 1.6.0
 - Tema renk ayarlamaları yapıldı.
 - Arama sonuç sayısı göstergesi sistemi eklendi.

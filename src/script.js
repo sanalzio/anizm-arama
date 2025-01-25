@@ -56,6 +56,8 @@ const logoSmallImg = document.getElementById("logo-small");
 
 const logoBtn = document.getElementById("logo-btn");
 
+const footer = document.getElementById("footer");
+
 const html = document.documentElement;
 
 
@@ -192,11 +194,7 @@ function search(query) {
             (anime.info_othernames &&
                 anime.info_othernames
                     .toLowerCase()
-                    .includes(query))/*  ||
-            (anime.info_japanese &&
-                anime.info_japanese
-                    .toLowerCase()
-                    .includes(query)) */
+                    .includes(query))
     );
 
 
@@ -210,6 +208,8 @@ function search(query) {
         if (matchedAnimesLength > 7) {
             printCards(matchedAnimes.slice(0,7));
             overflowAnimeJsons = matchedAnimes.slice(7);
+
+            footer.style.display = "none";
         }
 
         else
@@ -276,6 +276,8 @@ window.addEventListener("scroll", () => {
 
             printCards(overflowAnimeJsons);
             overflowAnimeJsons = {};
+
+            footer.style.display = "flex";
 
         }
 
