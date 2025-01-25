@@ -129,26 +129,6 @@ header{
 /* - Logo - */
 
 
-/* - Github btn - */
-
-#gh-btn{
-    overflow: hidden;
-
-    color: light-dark(var(--githubButtonColorLight), var(--githubButtonColor));
-
-    #gh-btn-ico{
-        display: inline;
-        width: 2rem;
-        height: 2rem;
-    }
-}
-#gh-btn:visited {
-    color: light-dark(var(--githubButtonColorLight), var(--githubButtonColor));
-}
-
-/* - Github btn - */
-
-
 /* - Theme form - */
 
 select{
@@ -169,7 +149,6 @@ select{
 #theme-form {
 
     display: inline-flex;
-    margin-right: 0.5rem;
     margin-left: 0.75rem;
 
     #theme-ico{

@@ -1,3 +1,6 @@
+# 1.6.3
+- Üst çubuktan (header) github düğmesi kaldırıldı. (Alt bölmedeki (footer) depo bağlantısı halen duruyor.)
+
 # 1.6.2
 - Tema seçeneklerinin isimleri değiştirildi. (`src/index.html` 52 - 55 satırları)
 
