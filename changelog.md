@@ -1,3 +1,6 @@
+# 1.6.4
+- "Diğer isimler" bölümüne İngilizce isim eklendi.
+
 # 1.6.3
 - Üst çubuktan (header) github düğmesi kaldırıldı. (Alt bölmedeki (footer) depo bağlantısı halen duruyor.)
 

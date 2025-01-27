@@ -111,11 +111,13 @@ function generateCard(animeJson) {
         info_poster,
         info_year,
         info_malpoint,
-        info_title
+        info_title,
+        info_titleenglish
     } = animeJson;
 
-    const otherNames = info_othernames?.trim() || "-";
-    const displayOtherNames = (otherNames === "-" ? info_japanese : `${otherNames}, ${info_japanese}`) || "-";
+    let otherNames = [info_othernames?.trim(), info_titleenglish, info_japanese]
+        .filter(Boolean)
+        .join(", ") || "-";
 
     const decodedSummary = decodeEntities(info_summary || "");
     const synopsis = (decodedSummary.match(/(?<=>)[^<]+/g)?.join(" ") || decodedSummary).trim();
@@ -135,7 +137,7 @@ function generateCard(animeJson) {
         <a href="https://${hostname}/${info_slug}" class="card-title">${info_title}</a>
         <p class="card-other-titles-container">
             <span class="card-other-titles-label">Diğer isimler:</span>
-            <span class="card-other-titles">${displayOtherNames}</span>
+            <span class="card-other-titles">${otherNames}</span>
         </p>
         <p class="card-synopsis">${synopsis}</p>
     </div>
