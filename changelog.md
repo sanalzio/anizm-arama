@@ -1,3 +1,6 @@
+# 1.6.6
+- Arama girdisi için uzunluk limiti kaldırıldı.
+
 # 1.6.5
 - Arama çubuğuna tıklayınca tüm içeriği seçme özelliği getirildi.
 

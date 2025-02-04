@@ -317,19 +317,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         queryInput.value = query;
 
-        if (query.length > 2) {
+        showMessage("Aranıyor...", true);
 
-            showMessage("Aranıyor...", true);
+        const req = await fetch("https://anizm.net/getAnimeListForSearch");
+        json = await req.json();
 
-            const req = await fetch("https://anizm.net/getAnimeListForSearch");
-            json = await req.json();
-
-            search(query.toLowerCase());
-
-        }
-        else {
-            showMessage("En az 3 karakterli bir arama yapınız.");
-        }
+        search(query.toLowerCase());
 
     }
 
