@@ -58,6 +58,8 @@ const logoBtn = document.getElementById("logo-btn");
 
 const footer = document.getElementById("footer");
 
+const scrollToTop = document.getElementById("scroll-to-top");
+
 const html = document.documentElement;
 
 
@@ -263,6 +265,11 @@ queryInput.addEventListener("keypress", function (event) {
 });
 
 
+scrollToTop.addEventListener("click", () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+});
+
+
 window.addEventListener("scroll", () => {
 
     if (overflowAnimeJsons.length > 0 && html.offsetHeight + html.scrollTop >= html.scrollHeight) {
@@ -284,6 +291,31 @@ window.addEventListener("scroll", () => {
         }
 
     }
+
+    if (html.scrollTop >= window.innerHeight) {
+
+        if (main.clientHeight - html.scrollTop - html.clientHeight < footer.clientHeight)
+            scrollToTop.style.bottom = "calc(" +
+                (
+                    footer.clientHeight -
+                    (
+                        main.clientHeight -
+                        html.scrollTop -
+                        html.clientHeight
+                    )
+                ).toString() +
+                "px + 1rem";
+
+        else
+            scrollToTop.style.bottom = "1rem";
+
+
+        if (getComputedStyle(scrollToTop).display == "none")
+            scrollToTop.style.display = "inline";
+    }
+    else if (getComputedStyle(scrollToTop).display != "none")
+        scrollToTop.style.display = "none";
+
 });
 
 

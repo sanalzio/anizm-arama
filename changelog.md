@@ -1,3 +1,7 @@
+# 1.7.0
+- Başa dönme düğmesi eklendi
+- Bazı düğmelere `title` verisi eklendi.
+
 # 1.6.6
 - Arama girdisi için uzunluk limiti kaldırıldı.
 

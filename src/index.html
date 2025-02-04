@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
 
     <meta charset="UTF-8">
@@ -14,6 +15,7 @@
     <link id="favicon" rel="shortcut icon" href="./assets/favicon/orange.ico" type="image/x-icon">
 
 </head>
+
 <body>
 
     <script src="./script.js" defer></script>
@@ -21,7 +23,7 @@
     <div id="main">
 
         <header>
-            <a id="logo-btn" href="https://anizm.net/">
+            <a id="logo-btn" href="https://anizm.net/" title="Anizm">
                 <img id="logo" src="./assets/logo/orange.webp" alt="anizm logo">
                 <img id="logo-small" src="./assets/icon/orange.png" alt="anizm logo küçük">
             </a>
@@ -29,12 +31,15 @@
 
             <div id="search-form">
 
-                <input type="text" name="query" id="query" onclick="this.select()" placeholder="Anime ara..." spellcheck="false" autocomplete="off">
+                <input title="Anime ara..." type="text" name="query" id="query" onclick="this.select()" placeholder="Anime ara..."
+                    spellcheck="false" autocomplete="off">
 
-                <button id="search-btn">
+                <button id="search-btn" title="Ara">
 
-                    <svg id="search-btn-ico" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                    <svg id="search-btn-ico" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                        width="24px" fill="currentColor">
+                        <path
+                            d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
                     </svg>
 
                 </button>
@@ -44,11 +49,13 @@
 
             <div id="theme-form">
 
-                <svg id="theme-ico" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
-                    <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 32.5-156t88-127Q256-817 330-848.5T488-880q80 0 151 27.5t124.5 76q53.5 48.5 85 115T880-518q0 115-70 176.5T640-280h-74q-9 0-12.5 5t-3.5 11q0 12 15 34.5t15 51.5q0 50-27.5 74T480-80Zm0-400Zm-220 40q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120-160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm200 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120 160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17ZM480-160q9 0 14.5-5t5.5-13q0-14-15-33t-15-57q0-42 29-67t71-25h70q66 0 113-38.5T800-518q0-121-92.5-201.5T488-800q-136 0-232 93t-96 227q0 133 93.5 226.5T480-160Z"/>
+                <svg id="theme-ico" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                    width="24px" fill="currentColor">
+                    <path
+                        d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 32.5-156t88-127Q256-817 330-848.5T488-880q80 0 151 27.5t124.5 76q53.5 48.5 85 115T880-518q0 115-70 176.5T640-280h-74q-9 0-12.5 5t-3.5 11q0 12 15 34.5t15 51.5q0 50-27.5 74T480-80Zm0-400Zm-220 40q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120-160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm200 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120 160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17ZM480-160q9 0 14.5-5t5.5-13q0-14-15-33t-15-57q0-42 29-67t71-25h70q66 0 113-38.5T800-518q0-121-92.5-201.5T488-800q-136 0-232 93t-96 227q0 133 93.5 226.5T480-160Z" />
                 </svg>
 
-                <select name="theme" id="theme-select">
+                <select title="Tema seç" name="theme" id="theme-select">
                     <option id="op-orange" value="orange">Turuncu</option>
                     <option id="op-green" value="green">Yeşil</option>
                     <option id="op-blue" value="blue">Mavi</option>
@@ -62,7 +69,15 @@
         <p id="results-count-p"><span id="results-count">0</span> sonuç</p>
 
         <div id="message-container">
-            <svg width="40" height="40" viewBox="0 0 0.8 0.8" fill="currentColor" id="loader-icon" xmlns="http://www.w3.org/2000/svg"><g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" transform="scale(0.05)"><path d="m 8,1.5 a 6.5,6.5 0 1 0 0,13 6.5,6.5 0 0 0 0,-13 z M 0,8 A 8,8 0 1 1 16,8 8,8 0 0 1 0,8 Z" opacity="0.2"/><path d="M 7.25,0.75 A 0.75,0.75 0 0 1 8,0 8,8 0 0 1 16,8 0.75,0.75 0 0 1 14.5,8 6.5,6.5 0 0 0 8,1.5 0.75,0.75 0 0 1 7.25,0.75 Z"/></g></svg>
+            <svg width="40" height="40" viewBox="0 0 0.8 0.8" fill="currentColor" id="loader-icon"
+                xmlns="http://www.w3.org/2000/svg">
+                <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" transform="scale(0.05)">
+                    <path d="m 8,1.5 a 6.5,6.5 0 1 0 0,13 6.5,6.5 0 0 0 0,-13 z M 0,8 A 8,8 0 1 1 16,8 8,8 0 0 1 0,8 Z"
+                        opacity="0.2" />
+                    <path
+                        d="M 7.25,0.75 A 0.75,0.75 0 0 1 8,0 8,8 0 0 1 16,8 0.75,0.75 0 0 1 14.5,8 6.5,6.5 0 0 0 8,1.5 0.75,0.75 0 0 1 7.25,0.75 Z" />
+                </g>
+            </svg>
             <p id="message">Yükleniyor...</p>
         </div>
 
@@ -70,19 +85,33 @@
 
         <footer id="footer">
 
-            <p id="aciklama">Bu site gayriresmi bir sitedir. Açık kaynak kodlu geliştirilen bir projedir. Ticari kullanımı yasaktır.</p>
+            <p id="aciklama">Bu site gayriresmi bir sitedir. Açık kaynak kodlu geliştirilen bir projedir. Ticari
+                kullanımı yasaktır.</p>
 
             <div id="linkler">
 
                 <span id="license">CC BY-NC 4.0</span>
 
-                <span id="github-repo-container"><span id="github-repo-label">Depo:</span> <a href="https://github.com/sanalzio/anizm-arama/" id="github-depo-link">sanalzio/anizm-arama</a></span>
+                <span id="github-repo-container"><span id="github-repo-label">Depo:</span> <a
+                        href="https://github.com/sanalzio/anizm-arama/"
+                        id="github-depo-link">sanalzio/anizm-arama</a></span>
 
             </div>
 
         </footer>
 
+        <button id="scroll-to-top" title="Başa dön">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                <path
+                    d="m3.695 1.258-.039.025zm8.625.012q.077.047.153.097zm-9.53.662-.052.045zm-.813.806-.045.051zm12.656.79q.05.075.097.152zm-13.35.128-.025.04zM8 4.293 2.646 9.646l.708.708L8 5.707l4.646 4.647.708-.708zm-6.742 8.012.025.039zm13.484 0-.025.039zm-12.81.906.045.05zm12.136 0-.045.05zm-11.33.812.051.045zm10.524 0-.051.045zm-9.606.694.04.025zm8.688 0-.04.025z"
+                    fill="light-dark(var(--themeSecondaryBgColorLight), var(--themeBgColor))" />
+                <path fill="currentColor"
+                    d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m13.354 1.646-.707.707L8 5.707l-4.646 4.647-.707-.707L8 4.293Z" />
+            </svg>
+        </button>
+
     </div>
 
 </body>
+
 </html>
