@@ -8,6 +8,8 @@ let overflowAnimeJsons = [];
 var params = new URL(location.href).searchParams;
 var hostname = "anizm.net";
 
+var queryInpClicked = false;
+
 const faviconPath = {
     orange: "./assets/favicon/orange.ico",
     green: "./assets/favicon/green.png",

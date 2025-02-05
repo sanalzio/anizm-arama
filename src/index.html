@@ -31,7 +31,7 @@
 
             <div id="search-form">
 
-                <input title="Anime ara..." type="text" name="query" id="query" onclick="this.select()" placeholder="Anime ara..."
+                <input title="Anime ara..." type="text" name="query" id="query" onclick="if (!queryInpClicked) { this.select(); queryInpClicked=true; }" placeholder="Anime ara..."
                     spellcheck="false" autocomplete="off">
 
                 <button id="search-btn" title="Ara">

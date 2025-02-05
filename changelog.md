@@ -1,3 +1,6 @@
+# 1.7.1
+- 1.6.5 güncellemesi düzeltildi.
+
 # 1.7.0
 - Başa dönme düğmesi eklendi
 - Bazı düğmelere `title` verisi eklendi.
