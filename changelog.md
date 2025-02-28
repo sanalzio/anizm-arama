@@ -1,3 +1,8 @@
+# 1.8.0
+- Arama çubuğu için `Temizle` düğmesi eklendi.
+- Daha detaylı arama algoritması getirildi.
+- Tekrarlanan alternatif isimler engellendi.
+
 # 1.7.1
 - 1.6.5 güncellemesi düzeltildi.
 

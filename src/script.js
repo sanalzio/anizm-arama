@@ -42,6 +42,7 @@ const themeLink = document.getElementById("theme-link");
 const themeSelect = document.getElementById("theme-select");
 
 const searchBtn = document.getElementById("search-btn");
+const clearQueryBtn = document.getElementById("clear-query");
 const queryInput = document.getElementById("query");
 
 const messageContainer = document.getElementById("message-container");
@@ -71,6 +72,20 @@ const html = document.documentElement;
 
 
 /* -- Functions -- */
+
+
+String.prototype.differenceCount = function (target) {
+    let maxLength = Math.max(this.length, target.length);
+    let diffCount = 0;
+
+    for (let i = 0; i < maxLength; i++) {
+        if (this[i] !== target[i]) {
+            diffCount++;
+        }
+    }
+
+    return diffCount;
+}
 
 
 function showMessage(message, loader=false) {
@@ -120,7 +135,7 @@ function generateCard(animeJson) {
     } = animeJson;
 
     let otherNames = [info_othernames?.trim(), info_titleenglish, info_japanese]
-        .filter(Boolean)
+        .filter(name => name && name.toLowerCase() !== info_title.toLowerCase())
         .join(", ") || "-";
 
     const decodedSummary = decodeEntities(info_summary || "");
@@ -192,14 +207,17 @@ function search(query) {
             (anime.info_titleoriginal &&
                 anime.info_titleoriginal
                     .toLowerCase()
+                    .replace(/[^a-z\s]/g, "")
                     .includes(query)) ||
             (anime.info_titleenglish &&
                 anime.info_titleenglish
                     .toLowerCase()
+                    .replace(/[^a-z\s]/g, "")
                     .includes(query)) ||
             (anime.info_othernames &&
                 anime.info_othernames
                     .toLowerCase()
+                    .replace(/[^a-z\s]/g, "")
                     .includes(query))
     );
 
@@ -222,8 +240,58 @@ function search(query) {
             printCards(matchedAnimes);
 
     }
-    else
+    else {
+
+        const tryCount = Math.floor(query.length / 2);
+
+        if (tryCount >0) for (let i = 1; i <= tryCount; i++) {
+
+            const matchedAnimes = json.filter(
+                (anime) =>
+                    (anime.info_titleoriginal &&
+                        anime.info_titleoriginal
+                            .toLowerCase()
+                            .replace(/[^a-z\s]/g, "")
+                            .differenceCount(query) === i) ||
+                    (anime.info_titleenglish &&
+                        anime.info_titleenglish
+                            .toLowerCase()
+                            .replace(/[^a-z\s]/g, "")
+                            .differenceCount(query) === i) ||
+                    (anime.info_othernames &&
+                        anime.info_othernames
+                            .toLowerCase()
+                            .replace(/[^a-z\s]/g, "")
+                            .differenceCount(query) === i)
+            );
+        
+        
+            let matchedAnimesLength = matchedAnimes.length;
+        
+            if (matchedAnimesLength > 0) {
+        
+                resultsCount.innerHTML = matchedAnimesLength;
+                resultsCountP.style.display = "block";
+        
+                if (matchedAnimesLength > 7) {
+                    printCards(matchedAnimes.slice(0,7));
+                    overflowAnimeJsons = matchedAnimes.slice(7);
+        
+                    footer.style.display = "none";
+                }
+        
+                else
+                    printCards(matchedAnimes);
+    
+                return;
+            } else {
+                continue;
+            }
+        }
+
+
         showMessage("Sonuç bulunamadı.");
+    }
 
 }
 
@@ -264,6 +332,21 @@ queryInput.addEventListener("keypress", function (event) {
 
         searchBtn.click();
     }
+});
+
+
+queryInput.addEventListener("input", () => {
+    if (queryInput.value === "") {
+        clearQueryBtn.style.display = "none";
+    } else {
+        clearQueryBtn.style.display = "flex";
+    }
+});
+
+
+clearQueryBtn.addEventListener("click", () => {
+    queryInput.value = "";
+    clearQueryBtn.style.display = "none";
 });
 
 
@@ -340,7 +423,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!params.get("q")) {
 
-        queryInput.focus();
+        /* if (!location.host.match(/[\d]{3}\.[\d]\.[\d]\.[\d]:[\d]{4}/)) */ queryInput.focus();
         showMessage("Aramaya başlayın...");
 
     } else {
@@ -350,13 +433,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.title = query + " - Anizm arama";
 
         queryInput.value = query;
+        clearQueryBtn.style.display = "flex";
 
         showMessage("Aranıyor...", true);
 
         const req = await fetch("https://anizm.net/getAnimeListForSearch");
         json = await req.json();
 
-        search(query.toLowerCase());
+        search(query.toLowerCase().replace(/[^a-z\s]/g, ""));
 
     }
 
