@@ -1,3 +1,6 @@
+# 1.8.1
+- Firefox için kaydırma çubuğu özelleştirmeleri eklendi.
+
 # 1.8.0
 - Arama çubuğu için `Temizle` düğmesi eklendi.
 - Daha detaylı arama algoritması getirildi.
