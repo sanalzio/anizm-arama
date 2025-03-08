@@ -32,7 +32,7 @@ Arama motoru olarak `duckduckgo` kullanıyorum fakat orada `site:anizm.net` işl
 
 ## Bunu yapmak için iznin var mı?
 
-Hiçkimseden izin almadım lütfen anizm sitesinin sahipleri dava açmasın. `sanalzio@duck.com` mailine kaldır diye mail atın görür görmez kaldırırım. Discord'dan `@virtualzio` kullanıcısına da yazabilirsiniz.
+Hiç kimseden izin almadım lütfen anizm sitesinin sahipleri dava açmasın. `sanalzio@duck.com` mailine kaldır diye mail atın görür görmez kaldırırım. Discord'dan `@virtualzio` kullanıcısına da yazabilirsiniz.
 
 ## Nasıl kullanırım?
 
@@ -44,7 +44,7 @@ Hiçkimseden izin almadım lütfen anizm sitesinin sahipleri dava açmasın. `sa
 
 ## Dur bekle! Gizli bir özelliğim var.
 
-Geçenlerde anizm sitesinin `anizm.net` dışında `anizle.com` domaini'de olduğunu fark ettim. Eğer linklerin başka bir domain'e gitmesini istiyorsanız URL kısmında `?` işaretinin yanına `hostname=anizle.com&` koaybilirsiniz.
+Geçenlerde anizm sitesinin `anizm.net` dışında `anizle.com` domaini'de olduğunu fark ettim. Eğer linklerin başka bir domain'e gitmesini istiyorsanız URL kısmında `?` işaretinin yanına `hostname=anizle.com&` koyabilirsiniz.
 
 [`/index.html?hostname=anizle.com&q=Another`](https://sanalzio.github.io/anizm-arama/src/index.html?hostname=anizle.com&q=Another) gibi.
 

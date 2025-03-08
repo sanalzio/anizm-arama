@@ -32,7 +32,6 @@
             <div id="search-form">
 
                 <input title="Anime ara..." type="text" name="query" id="query" placeholder="Anime ara..." spellcheck="false" autocomplete="off">
-                <!--  onclick="if (!queryInpClicked) { this.select(); queryInpClicked=true; }"  :  Arama çubuğuna tıklayınca tüm içeriği seçme  -->
 
                 <button id="clear-query" title="Temizle">
                     <svg fill="currentColor" height="16px" width="16px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -75,15 +74,7 @@
         <p id="results-count-p"><span id="results-count">0</span> sonuç</p>
 
         <div id="message-container">
-            <svg width="40" height="40" viewBox="0 0 0.8 0.8" fill="currentColor" id="loader-icon"
-                xmlns="http://www.w3.org/2000/svg">
-                <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" transform="scale(0.05)">
-                    <path d="m 8,1.5 a 6.5,6.5 0 1 0 0,13 6.5,6.5 0 0 0 0,-13 z M 0,8 A 8,8 0 1 1 16,8 8,8 0 0 1 0,8 Z"
-                        opacity="0.2" />
-                    <path
-                        d="M 7.25,0.75 A 0.75,0.75 0 0 1 8,0 8,8 0 0 1 16,8 0.75,0.75 0 0 1 14.5,8 6.5,6.5 0 0 0 8,1.5 0.75,0.75 0 0 1 7.25,0.75 Z" />
-                </g>
-            </svg>
+            <div class="loader" id="main-loader"></div>
             <p id="message">Yükleniyor...</p>
         </div>
 

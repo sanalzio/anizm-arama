@@ -1,3 +1,7 @@
+# 1.9.0
+- Daha kapsamlı arama sistemi eklendi.
+- Yüklenme çemberi düzenlendi.
+
 # 1.8.1
 - Firefox için kaydırma çubuğu özelleştirmeleri eklendi.
 
