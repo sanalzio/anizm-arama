@@ -1,3 +1,6 @@
+# 1.9.1
+- Daha kapsamlı arama sistemi eklendi.
+
 # 1.9.0
 - Daha kapsamlı arama sistemi eklendi.
 - Yüklenme çemberi düzenlendi.

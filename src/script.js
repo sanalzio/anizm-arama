@@ -204,9 +204,6 @@ function search(searchQuery) {
 
     const query = searchQuery.toLowerCase().replace(/[^a-z\s]/g, "");
 
-    let queryKeywords = query.split(" ");
-    queryKeywords = queryKeywords.filter((el) => el.length >= query.length / queryKeywords.length);
-
 
 
 
@@ -258,60 +255,6 @@ function search(searchQuery) {
 
 
 
-    /* Search with keywords */
-    matchedAnimes = json.filter(
-        (anime) =>
-
-            (anime.info_titleoriginal &&
-                queryKeywords
-                    .some((el) => anime.info_titleoriginal
-                    .toLowerCase()
-                    .replace(/[^a-z\s]/g, "")
-                    .includes(el))) ||
-
-            (anime.info_titleenglish &&
-                queryKeywords
-                        .some((el) => anime.info_titleenglish
-                        .toLowerCase()
-                        .replace(/[^a-z\s]/g, "")
-                        .includes(el))) ||
-
-            (anime.info_othernames &&
-                queryKeywords
-                        .some((el) => anime.info_othernames
-                        .toLowerCase()
-                        .replace(/[^a-z\s]/g, "")
-                        .includes(el)))
-
-    ).sort(
-            (a, b) =>
-                a.info_titleoriginal.differenceCount(query) -
-                b.info_titleoriginal.differenceCount(query)
-        );
-
-
-    matchedAnimesLength = matchedAnimes.length;
-
-    if (matchedAnimesLength > 0) {
-
-        resultsCount.innerHTML = matchedAnimesLength;
-        resultsCountP.style.display = "block";
-
-        if (matchedAnimesLength > 7) {
-            printCards(matchedAnimes.slice(0,7));
-            overflowAnimeJsons = matchedAnimes.slice(7);
-
-            footer.style.display = "none";
-            return;
-        }
-
-        printCards(matchedAnimes);
-        return;
-    }
-
-
-
-
     /* Search with title similarity */
     const tryCount = Math.floor(query.length / 2);
 
@@ -338,10 +281,6 @@ function search(searchQuery) {
                         .replace(/[^a-z\s]/g, "")
                         .differenceCount(query) === i)
 
-        ).sort(
-            (a, b) =>
-                a.info_titleoriginal.differenceCount(query) -
-                b.info_titleoriginal.differenceCount(query)
         );
     
     
@@ -365,6 +304,74 @@ function search(searchQuery) {
         }
 
         continue;
+    }
+
+
+
+
+    /* Search with keywords */
+
+    const queryForKeywords = searchQuery.toLowerCase().replace(/[^a-z\s"']/g, "");
+
+    const prepareKeyword = inp => {
+        let kw = inp;
+        if (kw.match(/^".+"$|^'.+'$/))
+            kw = kw.slice(1, -1);
+        return kw;
+    }
+
+    let queryKeywords = query.match(/"[a-z\s']+"|'[a-z\s"]+'|[a-z]+/g);
+    queryKeywords = queryKeywords.filter(el => el.match(/^".+"$|^'.+'$/) || prepareKeyword(el).length >= query.length / queryKeywords.length);
+
+
+    matchedAnimes = json.filter(
+        (anime) =>
+
+            (anime.info_titleoriginal &&
+                queryKeywords
+                    .some(el => anime.info_titleoriginal
+                    .toLowerCase()
+                    .replace(/[^a-z\s"']/g, "")
+                    .includes(prepareKeyword(el)))) ||
+
+            (anime.info_titleenglish &&
+                queryKeywords
+                        .some(el => anime.info_titleenglish
+                        .toLowerCase()
+                        .replace(/[^a-z\s"']/g, "")
+                        .includes(prepareKeyword(el)))) ||
+
+            (anime.info_othernames &&
+                queryKeywords
+                        .some(el => anime.info_othernames
+                        .toLowerCase()
+                        .replace(/[^a-z\s"']/g, "")
+                        .includes(prepareKeyword(el))))
+
+    ).sort(
+            (a, b) =>
+                a.info_titleoriginal.differenceCount(query) -
+                b.info_titleoriginal.differenceCount(query)
+        );
+
+
+    matchedAnimesLength = matchedAnimes.length;
+
+    if (matchedAnimesLength > 0) {
+
+        resultsCount.innerHTML = matchedAnimesLength;
+        resultsCountP.style.display = "block";
+
+        if (matchedAnimesLength > 7) {
+            printCards(matchedAnimes.slice(0,7));
+            overflowAnimeJsons = matchedAnimes.slice(7);
+
+            footer.style.display = "none";
+            return;
+        }
+
+        printCards(matchedAnimes);
+        return;
     }
 
 
