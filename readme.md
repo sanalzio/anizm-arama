@@ -17,6 +17,10 @@
   - [Neden?](#neden)
   - [Bunu yapmak için iznin var mı?](#bunu-yapmak-için-iznin-var-mı)
   - [Nasıl kullanırım?](#nasıl-kullanırım)
+  - [Filtreleme özellikleri](#filtreleme-özellikleri)
+    - [Kullanım:](#kullanım)
+      - [örnekler:](#örnekler)
+    - [Filtreler:](#filtreler)
   - [Aramalar ÇOOOK yavaş!](#aramalar-çoook-yavaş)
   - [Dur bekle! Gizli bir özelliğim var.](#dur-bekle-gizli-bir-özelliğim-var)
 - [Lisans: CC BY-NC 4.0](#lisans-cc-by-nc-40)
@@ -37,6 +41,45 @@ Hiç kimseden izin almadım lütfen anizm sitesinin sahipleri dava açmasın. `s
 ## Nasıl kullanırım?
 
 **[sanalzio.github.io/anizm-arama/src/index.html](https://sanalzio.github.io/anizm-arama/src/index.html)** Adresine gidip ve kullanmaya başlayabilirsiniz.
+
+## Filtreleme özellikleri
+
+### Kullanım:
+```
+başlık(zorunlu değil) özellik:değer
+```
+#### örnekler:
+```
+tantei maxmalp:7 minmalp:6 sort:malp orderby:asc
+```
+```
+minwords:7 maxwords:10
+```
+
+### Filtreler:
+
+- `minmalp`: Minimum `MyAnimeList` puanı filtresi.
+  - Değer: 0.1 - 10 arası bir sayı.
+- `maxmalp`: Maximum `MyAnimeList` puanı filtresi.
+  - Değer: 0.1 - 10 arası bir sayı.
+- `minwords`: Minimum kelime sayısı filtresi.
+  - Değer: 1 - Sonsuz arası bir sayı.
+- `maxwords`: Maximum kelime sayısı filtresi.
+  - Değer: 1 - Sonsuz arası bir sayı.
+- `minyear`: Minimum yıl filtresi. (Düzgün çalışmıyor.)
+  - Değer: 1XXX - 2XXX arası bir sayı.
+- `maxyear`: Maximum yıl filtresi. (Düzgün çalışmıyor.)
+  - Değer: 1XXX - 2XXX arası bir sayı.
+- `sort`: Sıralama filtresi
+  - Değerler:
+    - `malp`: `MyAnimeList` puanına göre sıralar.
+    - `year`: Yılına göre sıralar.
+    - `wordcount`: Kelime sayısına göre sıralar.
+    - `title`: Başlığa göre sıralar.
+- `orderby`: Sıralama düzeni filtresi
+  - Değerler:
+    - `asc`: Düşükten yükseğe sıralar.
+    - `desc`: Yüksekten düşüğe sıralar.
 
 ## Aramalar ÇOOOK yavaş!
 

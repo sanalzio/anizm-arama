@@ -1,3 +1,7 @@
+# 1.10.0
+- Daha kapsamlı arama sistemi eklendi.
+- Arama sistemine filtreleme özelliği eklendi. (Daha fazla bilgi için [tıklayın](./readme.md#filtreleme-özellikleri))
+
 # 1.9.1
 - Daha kapsamlı arama sistemi eklendi.
 
