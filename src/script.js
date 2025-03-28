@@ -259,6 +259,7 @@ function search(rawQuery) {
         if (options.maxmalp && malpoint > options.maxmalp) return false;
         if (options.minmalp && malpoint < options.minmalp) return false;
 
+        if (title == undefined) return false;
         const wordCount = title.split(" ").length;
         if (options.maxwords && wordCount > options.maxwords) return false;
         if (options.minwords && wordCount < options.minwords) return false;

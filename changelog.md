@@ -1,3 +1,6 @@
+# 1.10.1
+- Küçük bir hata düzeltmesi.
+
 # 1.10.0
 - Daha kapsamlı arama sistemi eklendi.
 - Arama sistemine filtreleme özelliği eklendi. (Daha fazla bilgi için [tıklayın](./readme.md#filtreleme-özellikleri))
