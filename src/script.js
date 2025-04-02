@@ -502,7 +502,11 @@ function search(rawQuery) {
     let normalKeywords = searchQuery
         .toLowerCase()
         .replace(/[^a-z\d"'\s]+/g, "")
-        .match(/"[a-z\d\s']+"|[a-z\d]+/g);
+        .match(/"[a-z\d\s']+"|[a-z\d]+/g)
+        .filter(el =>
+            el.length >= (searchQuery.length / 2) / searchQuery.split(" ").length &&
+            el.length > 1
+        );
     if (forcedKeywords) normalKeywords = normalKeywords.filter(el => !forcedKeywords.includes(el));
 
     matchedAnimes = json.filter(

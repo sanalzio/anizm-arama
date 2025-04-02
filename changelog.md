@@ -1,3 +1,6 @@
+# 1.10.2
+- Alakasız sonuç bulma azaltıldı.
+
 # 1.10.1
 - Küçük bir hata düzeltmesi.
 
