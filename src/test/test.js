@@ -136,7 +136,7 @@ function searchAnz(rawQuery) {
 
 
         if (anizmSearch_printMatchedAnimes()) return;
-        
+
         console.log("Sonuç bulunamadı.");
         return;
     }
@@ -196,6 +196,9 @@ function searchAnz(rawQuery) {
 
 
         if (anizmSearch_printMatchedAnimes()) return;
+
+        console.log("Sonuç bulunamadı.");
+        return;
     }
 
 

@@ -377,6 +377,9 @@ function search(rawQuery) {
         matchedAnimesLength = matchedAnimes.length;
 
         if (matchedAnimesLength > 0 && printMatchedAnimes(matchedAnimes, matchedAnimesLength)) return;
+
+        showMessage("Sonuç bulunamadı.");
+        return;
     }
 
 
