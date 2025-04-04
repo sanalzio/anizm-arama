@@ -140,7 +140,7 @@ header{
 
 /* - Theme form - */
 
-select{
+select {
     outline: none;
     border-radius: 0.3rem;
     width: 1.5rem;
@@ -150,10 +150,20 @@ select{
     vertical-align: baseline;
     cursor: pointer;
 
-    &:has(option[value="orange"]:checked) { background-color: var(--orangeThemeColor); }
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    margin-top: 0;
+    box-sizing: border-box;
+    z-index: 4;
+    color: transparent;
+    background-color: transparent;
+    border: none;
+
+    /* &:has(option[value="orange"]:checked) { background-color: var(--orangeThemeColor); }
     &:has(option[value="green"]:checked) { background-color: var(--greenThemeColor); }
     &:has(option[value="blue"]:checked) { background-color: var(--blueThemeColor); }
-    &:has(option[value="pink"]:checked) { background-color: var(--pinkThemeColor); }
+    &:has(option[value="pink"]:checked) { background-color: var(--pinkThemeColor); } */
 }
 
 #theme-form {
@@ -168,6 +178,7 @@ select{
         height: 2rem;
         display: inline;
         vertical-align: baseline;
+        z-index: 3;
     }
 
     &:has(option[value="orange"]:checked) { #theme-ico { color: var(--orangeThemeColor); } }
@@ -177,6 +188,7 @@ select{
 }
 
 option{
+    width: 5rem;
     background-color: light-dark(var(--themeBgColorLight), var(--themeDarkerBgColor));
 }
 

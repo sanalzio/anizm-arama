@@ -1,14 +1,25 @@
 String.prototype.differenceCount = function (target) {
-    let maxLength = Math.max(this.length, target.length);
-    let diffCount = 0;
+	let strA = this;
+	if (strA.length === 0) return target.length;
+	if (target.length === 0) return strA.length;
+	if (strA.length < target.length) [strA, target] = [ target, strA ];
+	else if (strA === target) return 0;
 
-    for (let i = 0; i < maxLength; i++) {
-        if (this[i] !== target[i]) {
-            diffCount++;
-        }
-    }
-
-    return diffCount;
+	var costX = new Int32Array(strA.length + 1);
+	for (let i = 0; i < costX.length; i++) costX[i] = i;
+	var costY = new Int32Array(strA.length + 1);
+	for (let i = 0; i < target.length; i++) {
+		costY[0] = i + 1;
+		for (let j = 0; j < strA.length; j++) {
+			costY[j + 1] = Math.min(
+				costY[j] + 1, // deletion
+				costX[j + 1] + 1, // insertion
+				strA[j] === target[i] ? costX[j] : (costX[j] + 1) // replacement
+			);
+		}
+		[costX, costY] = [ costY, costX ];
+	}
+	return costX[strA.length];
 }
 
 function anizmSearch_generateCard(animeJson) {
@@ -18,14 +29,26 @@ function anizmSearch_generateCard(animeJson) {
         info_year,
         info_malpoint,
         info_title,
-        info_titleenglish
+        info_titleenglish,
+        lastEpisode
     } = animeJson;
 
-    let otherNames = [info_othernames?.trim(), info_titleenglish, info_japanese]
+    const getEpisodeCount = (lastEpisode) => {
+        let episodeCount = lastEpisode[0].episode_sort;
+        if (episodeCount < 1) episodeCount = 1;
+        if (episodeCount > 9999 && lastEpisode[1])
+            for (let i = 1; i < lastEpisode.length; i++) {
+                if (lastEpisode[i].episode_sort && lastEpisode[i].episode_sort < 9999)
+                    episodeCount = lastEpisode[i].episode_sort + i;
+            }
+        return episodeCount;
+    };
+
+    let otherNames = [info_titleenglish, info_othernames?.trim(), info_japanese]
         .filter(name => name && name.toLowerCase() !== info_title.toLowerCase())
         .join(", ") || "-";
 
-    return `\n - ${info_title} -\n  Yıl: ${info_year || "-"}  Mal: ${info_malpoint?.toString() || "-"}\ndiğer: ${otherNames}\n`;
+    return `\n - ${info_title} -\n Yıl: ${info_year || "-"}  Mal: ${info_malpoint?.toString() || "-"}  Eps: ${getEpisodeCount(lastEpisode).toString() || "-"}\ndiğer: ${otherNames}\n`;
 }
 
 function anizmSearch_printCards(animes) {
@@ -36,8 +59,7 @@ function anizmSearch_printCards(animes) {
     }
 }
 
-function anizmSearch_printMatchedAnimes() {
-    let matchedAnimesLength = anizmSearch_matchedAnimes.length;
+function anizmSearch_printMatchedAnimes(matchedAnimesLength) {
 
     if (matchedAnimesLength > 0) {
 
@@ -55,37 +77,105 @@ function isJapanese(str) {
     return str.match(/[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\u30f2-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/) !== null;
 }
 
-function searchAnz(rawQuery) {
+function searchAnz(rawQuery, messageFunc, noFoundMsg) {
     
     const options = new Object();
-    const optionsRegexp = /(maxmalp|minmalp|maxwords|minwords|minyear|maxyear|sort|orderby):(\d+|\w+)/gi;
+    const optionsRegexp = /(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby):(\d+|\w+)/gi;
     const optionsRegexpMatches = [...rawQuery.matchAll(optionsRegexp)];
 
     if (optionsRegexpMatches)
         optionsRegexpMatches.forEach(optionMatch => {
+
             const key = optionMatch[1].toLowerCase();
-            options[key] = key == "sort" || key == "orderby" ? optionMatch[2].toLowerCase() : Number(optionMatch[2]);
+
+            switch(key) {
+
+                case "sort":
+                case "orderby":
+                    options[key] = optionMatch[2].toLowerCase();
+                    break;
+
+                case "year":
+                    options[key] = optionMatch[2];
+                    break;
+
+                default:
+                    options[key] = Number(optionMatch[2]);
+                    break;
+            }
         });
 
     const searchQuery = rawQuery.replace(optionsRegexp, "").replace(/\s\s+/g, " ").trim();
     const query = searchQuery.toLowerCase().replace(/[^a-z\d\s]/g, "");
 
-    const controllOptions = (title, year, malpoint) => {
+    const parseYear = (year) => {
+        let parsedYear = year;
+        if (year.length < 4 || year.toLowerCase() == "null") return false;
+        if (year.length > 4) {
+            let matchYear = year.match(/\d{4}/);
+            if (matchYear) parsedYear = matchYear;
+            else return false;
+        }
+        return parsedYear;
+    };
+    const getEpisodeCount = (lastEpisode) => {
+        let episodeCount = lastEpisode[0].episode_sort;
+        if (episodeCount < 1) episodeCount = 1;
+        if (episodeCount > 9999 && lastEpisode[1])
+            for (let i = 1; i < lastEpisode.length; i++) {
+                if (lastEpisode[i].episode_sort && lastEpisode[i].episode_sort < 9999)
+                    episodeCount = lastEpisode[i].episode_sort + i;
+            }
+        return episodeCount;
+    };
 
-        if (title == undefined && (options.maxwords || options.minwords)) return false;
-        if (malpoint == undefined && (options.maxmalp || options.minmalp)) return false;
-        if (year == undefined && (options.maxyear || options.minyear)) return false;
+    const controllOptions = (title, year, malpoint, lastEpisode) => {
 
-        if (options.maxyear && year > options.maxyear) return false;
-        if (options.minyear && year < options.minyear) return false;
+        if (
+            (title == undefined && (options.maxwords || options.minwords || options.wordcount)) ||
+            (malpoint == undefined && (options.maxmalp || options.minmalp || options.malp)) ||
+            (year == undefined && (options.maxyear || options.minyear || options.year)) ||
+            (lastEpisode == undefined && (options.maxeps || options.mineps || options.eps))
+        ) return false;
 
-        if (options.maxmalp && malpoint > options.maxmalp) return false;
-        if (options.minmalp && malpoint < options.minmalp) return false;
+        if (
+            (options.maxmalp && malpoint > options.maxmalp) ||
+            (options.minmalp && malpoint < options.minmalp) ||
+            (options.malp && malpoint !== options.malp)
+        ) return false;
 
-        if (title == undefined) return false;
-        const wordCount = title.split(" ").length;
-        if (options.maxwords && wordCount > options.maxwords) return false;
-        if (options.minwords && wordCount < options.minwords) return false;
+
+        if (options.maxyear || options.minyear || options.year) {
+
+            let parsedYear = parseYear(year);
+            if (!parsedYear) return false;
+
+            if (
+                (options.maxyear && parsedYear > options.maxyear) ||
+                (options.minyear && parsedYear < options.minyear) ||
+                (options.year && parsedYear !== options.year)
+            ) return false;
+        }
+
+
+        if (options.maxwords || options.minwords || options.wordcount) {
+            const wordCount = title.split(" ").length;
+            if (
+                (options.maxwords && wordCount > options.maxwords) ||
+                (options.minwords && wordCount < options.minwords) ||
+                (options.wordcount && wordCount !== options.wordcount)
+            ) return false;
+        }
+
+
+        if (options.maxeps || options.mineps || options.eps) {
+            let episodeCount = getEpisodeCount(lastEpisode);
+            if (
+                (options.maxeps && episodeCount > options.maxeps) ||
+                (options.mineps && episodeCount < options.mineps) ||
+                (options.eps && episodeCount !== options.eps)
+            ) return false;
+        }
 
         return true;
     };
@@ -103,6 +193,7 @@ function searchAnz(rawQuery) {
                     anime.info_titleoriginal,
                     anime.info_year,
                     anime.info_malpoint,
+                    anime.lastEpisode
                 )
 
         ).sort(
@@ -116,14 +207,22 @@ function searchAnz(rawQuery) {
                         return b.info_malpoint-a.info_malpoint;
                     }
                     if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
+                        let parsedYearA = parseYear(a.info_year);
+                        let parsedYearB = parseYear(b.info_year);
+
                         if (options.orderby == "asc")
-                            return a.info_year-b.info_year;
-                        return b.info_year-a.info_year;
+                            return Number(parsedYearA)-Number(parsedYearB);
+                        return Number(parsedYearB)-Number(parsedYearA);
                     }
                     if (options.sort == "wordcount") {
                         if (options.orderby == "asc")
                             return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
                         return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
+                    }
+                    if (options.sort == "epcount") {
+                        if (options.orderby == "asc")
+                            return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
+                        return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
                     }
                 }
 
@@ -135,9 +234,9 @@ function searchAnz(rawQuery) {
         );
 
 
-        if (anizmSearch_printMatchedAnimes()) return;
+        if (anizmSearch_printMatchedAnimes(anizmSearch_matchedAnimes.length)) return;
 
-        console.log("Sonuç bulunamadı.");
+        messageFunc(noFoundMsg);
         return;
     }
 
@@ -161,6 +260,7 @@ function searchAnz(rawQuery) {
                         undefined,
                         anime.info_year,
                         anime.info_malpoint,
+                        anime.lastEpisode
                     ))
 
         ).sort(
@@ -174,14 +274,22 @@ function searchAnz(rawQuery) {
                         return b.info_malpoint-a.info_malpoint;
                     }
                     if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
+                        let parsedYearA = parseYear(a.info_year);
+                        let parsedYearB = parseYear(b.info_year);
+
                         if (options.orderby == "asc")
-                            return a.info_year-b.info_year;
-                        return b.info_year-a.info_year;
+                            return Number(parsedYearA)-Number(parsedYearB);
+                        return Number(parsedYearB)-Number(parsedYearA);
                     }
                     if (options.sort == "wordcount") {
                         if (options.orderby == "asc")
                             return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
                         return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
+                    }
+                    if (options.sort == "epcount") {
+                        if (options.orderby == "asc")
+                            return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
+                        return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
                     }
                 }
 
@@ -195,9 +303,9 @@ function searchAnz(rawQuery) {
         );
 
 
-        if (anizmSearch_printMatchedAnimes()) return;
+        if (anizmSearch_printMatchedAnimes(anizmSearch_matchedAnimes.length)) return;
 
-        console.log("Sonuç bulunamadı.");
+        messageFunc(noFoundMsg);
         return;
     }
 
@@ -220,6 +328,7 @@ function searchAnz(rawQuery) {
                     anime.info_titleoriginal,
                     anime.info_year,
                     anime.info_malpoint,
+                    anime.lastEpisode
                 )
             ) {
 
@@ -237,6 +346,7 @@ function searchAnz(rawQuery) {
                     anime.info_titleenglish,
                     anime.info_year,
                     anime.info_malpoint,
+                    anime.lastEpisode
                 )
             ) {
 
@@ -254,6 +364,24 @@ function searchAnz(rawQuery) {
                     undefined,
                     anime.info_year,
                     anime.info_malpoint,
+                    anime.lastEpisode
+                )
+            ) {
+
+                return true;
+            }
+
+            if (
+                anime.info_studios &&
+                anime.info_studios
+                    .toLowerCase()
+                    .replace(/[^a-z\d\s]/g, "")
+                    .includes(query) &&
+                controllOptions(
+                    undefined,
+                    anime.info_year,
+                    anime.info_malpoint,
+                    anime.lastEpisode
                 )
             ) {
 
@@ -273,26 +401,39 @@ function searchAnz(rawQuery) {
                     return b.info_malpoint-a.info_malpoint;
                 }
                 if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
+                    let parsedYearA = parseYear(a.info_year);
+                    let parsedYearB = parseYear(b.info_year);
+
                     if (options.orderby == "asc")
-                        return a.info_year-b.info_year;
-                    return b.info_year-a.info_year;
+                        return Number(parsedYearA)-Number(parsedYearB);
+                    return Number(parsedYearB)-Number(parsedYearA);
                 }
                 if (options.sort == "wordcount") {
                     if (options.orderby == "asc")
                         return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
                     return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
                 }
+                if (options.sort == "epcount") {
+                    if (options.orderby == "asc")
+                        return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
+                    return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
+                }
+                if (options.sort == "title") {
+                    if (options.orderby == "desc")
+                        return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? b.info_titleoriginal.localeCompare(a.info_titleoriginal) : b.info_titleenglish.localeCompare(a.info_titleenglish);
+                    return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? a.info_titleoriginal.localeCompare(b.info_titleoriginal) : a.info_titleenglish.localeCompare(b.info_titleenglish);
+                }
             }
 
             if (options.orderby == "desc") {
 
-                if (findedIn === 0 || (!a.info_titleenglish && b.info_titleenglish))
+                if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
                     return b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
                 else
                     return b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
             }
 
-            if (findedIn === 0 || (!a.info_titleenglish && b.info_titleenglish))
+            if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
                 return a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
             else
                 return a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
@@ -300,7 +441,7 @@ function searchAnz(rawQuery) {
     );
 
 
-    if (anizmSearch_printMatchedAnimes()) return;
+    if (anizmSearch_printMatchedAnimes(anizmSearch_matchedAnimes.length)) return;
 
 
 
@@ -328,7 +469,6 @@ function searchAnz(rawQuery) {
             el.length > 1
         );
     if (forcedKeywords) normalKeywords = normalKeywords.filter(el => !forcedKeywords.includes(el));
-console.log(normalKeywords, forcedKeywords);
 
     anizmSearch_matchedAnimes = globalThis.anizmDB.filter(
             (anime) =>
@@ -349,7 +489,8 @@ console.log(normalKeywords, forcedKeywords);
                     controllOptions(
                         anime.info_titleoriginal,
                         anime.info_year,
-                        anime.info_malpoint
+                        anime.info_malpoint,
+                        anime.lastEpisode
                     )) ||
 
                 (anime.info_titleenglish &&
@@ -368,7 +509,8 @@ console.log(normalKeywords, forcedKeywords);
                     controllOptions(
                         anime.info_titleenglish,
                         anime.info_year,
-                        anime.info_malpoint
+                        anime.info_malpoint,
+                        anime.lastEpisode
                     )) ||
 
                 (anime.info_othernames &&
@@ -382,14 +524,13 @@ console.log(normalKeywords, forcedKeywords);
                         anime.info_othernames
                             .toLowerCase()
                             .replace(/[^a-z\d\s]/g, "")
-                            .includes(
-                                prepareKeyword(el, anime.info_titleoriginal)
-                            )
+                            .includes(prepareKeyword(el))
                     ) &&
                     controllOptions(
                         undefined,
                         anime.info_year,
-                        anime.info_malpoint
+                        anime.info_malpoint,
+                        anime.lastEpisode
                     ))
 
         )
@@ -409,9 +550,17 @@ console.log(normalKeywords, forcedKeywords);
                     a.info_year != undefined &&
                     b.info_year != undefined
                 ) {
+                    let parsedYearA = parseYear(a.info_year);
+                    let parsedYearB = parseYear(b.info_year);
+
                     if (options.orderby == "asc")
-                        return a.info_year - b.info_year;
-                    return b.info_year - a.info_year;
+                        return Number(parsedYearA)-Number(parsedYearB);
+                    return Number(parsedYearB)-Number(parsedYearA);
+                }
+                if (options.sort == "title") {
+                    if (options.orderby == "desc")
+                        return b.info_titleoriginal.localeCompare(a.info_titleoriginal);
+                    return a.info_titleoriginal.localeCompare(b.info_titleoriginal);
                 }
             }
 
@@ -428,7 +577,7 @@ console.log(normalKeywords, forcedKeywords);
         });
 
 
-    if (anizmSearch_printMatchedAnimes()) return;
+    if (anizmSearch_printMatchedAnimes(anizmSearch_matchedAnimes.length)) return;
 
 
 
@@ -450,6 +599,7 @@ console.log(normalKeywords, forcedKeywords);
                         anime.info_titleoriginal,
                         anime.info_year,
                         anime.info_malpoint,
+                        anime.lastEpisode
                     )) ||
 
                 (anime.info_titleenglish &&
@@ -461,6 +611,7 @@ console.log(normalKeywords, forcedKeywords);
                         anime.info_titleenglish,
                         anime.info_year,
                         anime.info_malpoint,
+                        anime.lastEpisode
                     )) ||
 
                 (anime.info_othernames &&
@@ -472,40 +623,48 @@ console.log(normalKeywords, forcedKeywords);
                         undefined,
                         anime.info_year,
                         anime.info_malpoint,
+                        anime.lastEpisode
                     ))
 
         ).sort(
-            (a, b) =>{
+            (a, b) => {
 
-                if (options.sort) {
-
-                    if (options.sort == "malp" && a.info_malpoint != undefined && b.info_malpoint != undefined) {
-                        if (options.orderby == "asc")
-                            return a.info_malpoint-b.info_malpoint;
-                        return b.info_malpoint-a.info_malpoint;
-                    }
-                    if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
-                        if (options.orderby == "asc")
-                            return a.info_year-b.info_year;
-                        return b.info_year-a.info_year;
-                    }
-                    if (options.sort == "wordcount") {
-                        if (options.orderby == "asc")
-                            return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
-                        return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
-                    }
+                if (options.sort == "malp" && a.info_malpoint != undefined && b.info_malpoint != undefined) {
+                    if (options.orderby == "asc")
+                        return a.info_malpoint-b.info_malpoint;
+                    return b.info_malpoint-a.info_malpoint;
                 }
+                if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
+                    let parsedYearA = parseYear(a.info_year);
+                    let parsedYearB = parseYear(b.info_year);
+
+                    if (options.orderby == "asc")
+                        return Number(parsedYearA)-Number(parsedYearB);
+                    return Number(parsedYearB)-Number(parsedYearA);
+                }
+                if (options.sort == "wordcount") {
+                    if (options.orderby == "asc")
+                        return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
+                    return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
+                }
+                if (options.sort == "epcount") {
+                    if (options.orderby == "asc")
+                        return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
+                    return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
+                }
+
+                return 0
             }
         );
 
 
-        if (anizmSearch_printMatchedAnimes()) return;
+        if (anizmSearch_printMatchedAnimes(anizmSearch_matchedAnimes.length)) return;
 
         continue;
     }
 
 
-    console.log("Sonuç bulunamadı.");
+    messageFunc(noFoundMsg);
 }
 
 var anizmSearch_matchedAnimes;
@@ -515,4 +674,12 @@ globalThis.anizmDB = require("./testdb.json");
 
 
 
-searchAnz(`search input`);
+searchAnz(
+
+
+    `maxeps:100 mineps:50 sort:epcount orderby:asc`,
+
+
+    console.log,
+    "Sonuç bulunamadı."
+);

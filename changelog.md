@@ -1,3 +1,9 @@
+# 1.11.0
+- Url seçeneklerine `engtitle` eklendi. (Daha fazla bilgi için [tıklayın](./readme.md#dur-bekle-gizli-özelliklerim-var))
+- Renk değiştirme düğmesi yenilendi.
+- Daha kapsamlı arama sistemi yazıldı.
+- Arama sistemine yeni filtreleme özellikleri eklendi. (`wordcount`, `year`, `eps`, `mineps`, `maxeps`, `malp`) (Daha fazla bilgi için [tıklayın](./readme.md#filtreleme-özellikleri))
+
 # 1.10.3
 - Küçük bir arama hatası düzeltildi.
 
