@@ -1,3 +1,6 @@
+# 1.11.1
+- Gereksiz bir satır silindi.
+
 # 1.11.0
 - Url seçeneklerine `engtitle` eklendi. (Daha fazla bilgi için [tıklayın](./readme.md#dur-bekle-gizli-özelliklerim-var))
 - Renk değiştirme düğmesi yenilendi.

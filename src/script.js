@@ -159,7 +159,6 @@ function generateCard(animeJson) {
 
     let title = engTitleByDef ? info_titleenglish : info_title;
     let otherTitle = engTitleByDef ? info_title : info_titleenglish;
-    console.log(title, otherTitle);
 
     let otherNames = [otherTitle, info_othernames?.trim(), info_japanese]
         .filter(name => name && name.toLowerCase() !== title.toLowerCase())
