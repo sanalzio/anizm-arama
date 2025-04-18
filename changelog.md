@@ -1,3 +1,9 @@
+# 1.12.0
+- Yeni renk temaları eklendi.
+- Arama sonuçlarına stüdyo ve bölüm sayısı bilgisi eklendi.
+- Daha arama işlevine yeni bir katman eklendi.
+- Üst bar minimalize edildi.
+
 # 1.11.1
 - Gereksiz bir satır silindi.
 

@@ -185,6 +185,9 @@ select {
     &:has(option[value="green"]:checked) { #theme-ico { color: var(--greenThemeColor); } }
     &:has(option[value="blue"]:checked) { #theme-ico { color: var(--blueThemeColor); } }
     &:has(option[value="pink"]:checked) { #theme-ico { color: var(--pinkThemeColor); } }
+    &:has(option[value="purple"]:checked) { #theme-ico { color: var(--purpleThemeColor); } }
+    &:has(option[value="red"]:checked) { #theme-ico { color: var(--redThemeColor); } }
+    &:has(option[value="gray"]:checked) { #theme-ico { color: var(--grayThemeColor); } }
 }
 
 option{
@@ -192,18 +195,13 @@ option{
     background-color: light-dark(var(--themeBgColorLight), var(--themeDarkerBgColor));
 }
 
-option[value="orange"]{
-    color: var(--orangeThemeColor);
-}
-option[value="green"]{
-    color: var(--greenThemeColor);
-}
-option[value="blue"]{
-    color: var(--blueThemeColor);
-}
-option[value="pink"]{
-    color: var(--pinkThemeColor);
-}
+option[value="orange"]{ color: var(--orangeThemeColor); }
+option[value="green"]{ color: var(--greenThemeColor); }
+option[value="blue"]{ color: var(--blueThemeColor); }
+option[value="pink"]{ color: var(--pinkThemeColor); }
+option[value="purple"]{ color: var(--purpleThemeColor); }
+option[value="red"]{ color: var(--redThemeColor); }
+option[value="gray"]{ color: var(--grayThemeColor); }
 
 /* - Theme form - */
 
@@ -450,7 +448,7 @@ option[value="pink"]{
             align-items: flex-start;
             justify-content: space-between;
 
-            color: light-dark(var(--primaryColor), var(--primaryColorDarker));
+            color: var(--primaryColorDarker);
 
             .card-mal-score, .card-year{
                 font-weight: bold;
@@ -475,6 +473,7 @@ option[value="pink"]{
         justify-content: start;
         overflow-y: auto;
         overflow-x: hidden;
+        padding-right: 0.5rem;
         height: 11rem;
 
         * {margin: 0;}
@@ -486,14 +485,20 @@ option[value="pink"]{
             text-decoration: underline;
         }
 
-        .card-other-titles-container{
+        .card-info-container{
             margin-bottom: 0.1rem;
             font-weight: 600;
-            color: light-dark(var(--primaryColorDarker), var(--primaryColor));
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            color: var(--primaryColor);
 
-            .card-other-titles-label{
+            .card-info-span:first-child{
+                flex: 1;
+            }
+            .card-info-label{
                 font-weight: 400;
-                color: light-dark(var(--primaryColorDarker), var(--primaryColor));
+                color: var(--primaryColor);
             }
         }
 
