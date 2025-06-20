@@ -1,3 +1,6 @@
+# 1.13.0
+- Filtreler için `#` başlığı zorunluluğu getirildi.
+
 # 1.12.0
 - Yeni renk temaları eklendi.
 - Arama sonuçlarına stüdyo ve bölüm sayısı bilgisi eklendi.

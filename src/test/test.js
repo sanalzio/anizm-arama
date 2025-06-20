@@ -1,4 +1,4 @@
-String.prototype.differenceCount = function (target) {
+String.prototype.levenshteinDistance = function (target) {
 	let strA = this;
 	if (strA.length === 0) return target.length;
 	if (target.length === 0) return strA.length;
@@ -289,11 +289,11 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                 }
 
                 if (options.orderby == "desc")
-                    return b.info_japanese.replace(/[\u3000-\u303f\s]/g, "").differenceCount(japaneseQuery) -
-                    a.info_japanese.replace(/[\u3000-\u303f\s]/g, "").differenceCount(japaneseQuery);
+                    return b.info_japanese.replace(/[\u3000-\u303f\s]/g, "").levenshteinDistance(japaneseQuery) -
+                    a.info_japanese.replace(/[\u3000-\u303f\s]/g, "").levenshteinDistance(japaneseQuery);
 
-                return a.info_japanese.replace(/[\u3000-\u303f\s]/g, "").differenceCount(japaneseQuery) -
-                b.info_japanese.replace(/[\u3000-\u303f\s]/g, "").differenceCount(japaneseQuery);
+                return a.info_japanese.replace(/[\u3000-\u303f\s]/g, "").levenshteinDistance(japaneseQuery) -
+                b.info_japanese.replace(/[\u3000-\u303f\s]/g, "").levenshteinDistance(japaneseQuery);
             }
         );
 
@@ -308,7 +308,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
 
 
     /* Search with title matches */
-    let findedIn = undefined;
+    let findedIn;
 
     anizmSearch_matchedAnimes = globalThis.anizmDB.filter(
         (anime) => {
@@ -329,7 +329,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                 )
             ) {
 
-                if (!findedIn) findedIn = 0;
+                if (findedIn == undefined) findedIn = 0;
                 return true;
             }
 
@@ -349,7 +349,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                 )
             ) {
 
-                if (!findedIn) findedIn = 1;
+                if (findedIn == undefined) findedIn = 1;
                 return true;
             }
 
@@ -423,23 +423,23 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                 }
                 if (options.sort == "title") {
                     if (options.orderby == "desc")
-                        return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? b.info_titleoriginal.localeCompare(a.info_titleoriginal) : b.info_titleenglish.localeCompare(a.info_titleenglish);
-                    return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? a.info_titleoriginal.localeCompare(b.info_titleoriginal) : a.info_titleenglish.localeCompare(b.info_titleenglish);
+                        return (findedIn === 1 && a.info_titleenglish && b.info_titleenglish) ? b.info_titleenglish.localeCompare(a.info_titleenglish) : b.info_titleoriginal.localeCompare(a.info_titleoriginal);
+                    return (findedIn === 1 && a.info_titleenglish && b.info_titleenglish) ? a.info_titleenglish.localeCompare(b.info_titleenglish) : a.info_titleoriginal.localeCompare(b.info_titleoriginal);
                 }
             }
 
             if (options.orderby == "desc") {
 
-                if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
-                    return b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                if (findedIn === 1 && a.info_titleenglish && b.info_titleenglish)
+                    return b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) - a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
                 else
-                    return b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                    return b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) - a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
             }
 
-            if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
-                return a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+            if (findedIn === 1 && a.info_titleenglish && b.info_titleenglish)
+                return a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) - b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
             else
-                return a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                return a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) - b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
         }
     );
 
@@ -516,13 +516,13 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
 
         if (options.orderby == "desc")
             return (
-                b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) -
-                a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) -
+                a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
             );
 
         return (
-            a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) -
-            b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+            a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query) -
+            b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").levenshteinDistance(query)
         );
     });
 
@@ -685,7 +685,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleoriginal
                         .toLowerCase()
                         .replace(/[^a-z\d\s]/g, "")
-                        .differenceCount(query) === i &&
+                        .levenshteinDistance(query) === i &&
                     controllOptions(
                         anime.info_titleoriginal,
                         anime.info_year,
@@ -697,7 +697,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleenglish
                         .toLowerCase()
                         .replace(/[^a-z\d\s]/g, "")
-                        .differenceCount(query) === i &&
+                        .levenshteinDistance(query) === i &&
                     controllOptions(
                         anime.info_titleenglish,
                         anime.info_year,
@@ -709,7 +709,7 @@ function searchAnz(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_othernames
                         .toLowerCase()
                         .replace(/[^a-z\d\s]/g, "")
-                        .differenceCount(query) === i &&
+                        .levenshteinDistance(query) === i &&
                     controllOptions(
                         undefined,
                         anime.info_year,
@@ -768,7 +768,7 @@ globalThis.anizmDB = require("./testdb.json");
 searchAnz(
 
 
-    `search`,
+    `a`,
 
 
     console.log,

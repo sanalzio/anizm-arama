@@ -299,7 +299,7 @@ const getEpisodeCount = (lastEpisode) => {
 function search(rawQuery, messageFunc, noFoundMsg) {
     
     const options = new Object();
-    const optionsRegexp = /(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby):(\d+|\w+)/gi;
+    const optionsRegexp = /#(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby):(\d+|\w+)/gi;
     const optionsRegexpMatches = [...rawQuery.matchAll(optionsRegexp)];
 
     if (optionsRegexpMatches)
