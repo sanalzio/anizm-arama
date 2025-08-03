@@ -1,3 +1,8 @@
+# 1.14.0
+- Eski tarayıcılar için iyileştirmeler yapıldı.
+- Etiket filtreleme özelliği getirildi.
+- Arama işlemi güçlendirildi.
+
 # 1.13.0
 - Filtreler için `#` başlığı zorunluluğu getirildi.
 

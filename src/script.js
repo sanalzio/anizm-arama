@@ -6,7 +6,7 @@ var json;
 let overflowAnimeJsons = [];
 
 var params = new URL(location.href).searchParams;
-var hostname = "anizm.net";
+var hostname = "anizm.pro";
 
 var engTitleByDef = false;
 
@@ -165,7 +165,8 @@ function generateCard(animeJson) {
         info_title,
         info_titleenglish,
         info_studios,
-        lastEpisode
+        lastEpisode,
+        categories
     } = animeJson;
 
     const engTitle = engTitleByDef && info_titleenglish != undefined && info_titleenglish.length > 0;
@@ -183,11 +184,13 @@ function generateCard(animeJson) {
     let year = "?";
     if (info_year) year = parseYear(info_year);
 
+    const tags = categories ? categories.map(tagObj => tagObj.tag_title).join(", ") : "-";
+
     return `
 <div class="result-card">
     <div class="card-left">
         <a href="https://${hostname}/${info_slug}">
-            <img width="255px" height="321px" class="card-poster" src="https://anizm.net/storage/pcovers/${info_poster}" alt="${info_slug}-poster">
+            <img width="255px" height="321px" class="card-poster" src="https://anizm.pro/storage/pcovers/${info_poster}" alt="${info_slug}-poster">
         </a>
         <div class="card-left-under">
             <span class="card-year">${year}</span>
@@ -202,12 +205,18 @@ function generateCard(animeJson) {
                 <span class="card-info card-other-titles">${otherNames}</span>
             </span>
         </span>
+        <span class="card-info-container card-tags-container">
+            <span class="card-info-span card-tags-span">
+                <span class="card-info-label card-tags-label">Etiketler:</span>
+                <span class="card-info card-tags">${tags}</span>
+            </span>
+        </span>
         <span class="card-info-container">
             <span class="card-info-span card-studios-span">
                 <span class="card-info-label card-studios-label">Stüdyo:</span>
                 <span class="card-info card-studios">${info_studios || "?"}</span>
             </span>
-            
+
             <span class="card-info-span card-epcount-span">
                 <span class="card-info-label card-epcount-label">Bölüm sayısı:</span>
                 <span class="card-info card-epcount">${lastEpisode != undefined ? getEpisodeCount(lastEpisode).toString() : "?"}</span>
@@ -271,7 +280,7 @@ function printMatchedAnimes(matchedAnimes, matchedAnimesLength) {
 }
 
 
-const parseYear = (year) => {
+function parseYear(year) {
     let parsedYear = year;
     if (year.length < 4 || year.toLowerCase() == "null") return false;
     if (year.length > 4) {
@@ -280,9 +289,9 @@ const parseYear = (year) => {
         else return false;
     }
     return parsedYear;
-};
+}
 
-const getEpisodeCount = (lastEpisode) => {
+function getEpisodeCount(lastEpisode) {
     let episodeCount = lastEpisode[0].episode_sort;
     if (episodeCount < 1) episodeCount = 1;
     if (episodeCount > 9999 && lastEpisode[1])
@@ -291,68 +300,74 @@ const getEpisodeCount = (lastEpisode) => {
                 episodeCount = lastEpisode[i].episode_sort + i;
         }
     return episodeCount;
-};
+}
 
 
-// if (printMatchedAnimes(matchedAnimes, matchedAnimes.length)) return;
-// matchedAnimes = json
+Object.prototype.isEmpty = function () {
+    for (const prop in this) {
+        if (Object.hasOwn(this, prop)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
 function search(rawQuery, messageFunc, noFoundMsg) {
     
     const options = new Object();
-    const optionsRegexp = /#(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby):(\d+|\w+)/gi;
+    const optionsRegexp = /(["'])(#(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby|tags|tagmode):([A-Za-z0-9çğıöşüÇĞİÖŞÜ_,! \-]+))\1|#(maxmalp|minmalp|malp|maxwords|minwords|wordcount|minyear|maxyear|year|maxeps|mineps|eps|sort|orderby|tags|tagmode):([A-Za-z0-9çğıöşüÇĞİÖŞÜ_,!\-]+)/gi;
     const optionsRegexpMatches = [...rawQuery.matchAll(optionsRegexp)];
 
-    if (optionsRegexpMatches)
-        optionsRegexpMatches.forEach(optionMatch => {
 
-            const key = optionMatch[1].toLowerCase();
-
-            switch(key) {
-
-                case "sort":
-                case "orderby":
-                    options[key] = optionMatch[2].toLowerCase();
-                    break;
-
-                case "year":
-                    options[key] = optionMatch[2];
-                    break;
-
-                default:
-                    options[key] = Number(optionMatch[2]);
-                    break;
-            }
-        });
-
-    const controllOptions = (title, year, malpoint, lastEpisode) => {
+    const controllOptions = (title, year, malpoint, lastEpisode, categoriesObj) => {
 
         if (
             (title == undefined && (options.maxwords || options.minwords || options.wordcount)) ||
             (malpoint == undefined && (options.maxmalp || options.minmalp || options.malp)) ||
             (year == undefined && (options.maxyear || options.minyear || options.year)) ||
-            (lastEpisode == undefined && (options.maxeps || options.mineps || options.eps))
+            (lastEpisode == undefined && (options.maxeps || options.mineps || options.eps)) ||
+            ((categoriesObj == undefined || categoriesObj.length == 0) && (options.tags || options.excludeTags))
         ) return false;
-    
+
         if (
             (options.maxmalp && malpoint > options.maxmalp) ||
             (options.minmalp && malpoint < options.minmalp) ||
             (options.malp && malpoint !== options.malp)
         ) return false;
-    
-    
+
+
+        if (options.tags || options.excludeTags) {
+            const categories = categoriesObj.map(tagJson => tagJson.tag_title.toLocaleLowerCase("tr"));
+            if (
+                !(
+                    (
+                        options.tagmode == "or" &&
+                        categories.some(tag => options.tags && options.tags.includes(tag))
+                    ) ||
+                    (
+                        options.tags.every(tagObj => categories.includes(tagObj))
+                    )
+                ) ||
+                (categories.some(tag => options.excludeTags && options.excludeTags.includes(tag)))
+            ) return false;
+        }
+
+
         if (options.maxyear || options.minyear || options.year) {
-    
+
             let parsedYear = parseYear(year);
             if (!parsedYear) return false;
-    
+
             if (
                 (options.maxyear && parsedYear > options.maxyear) ||
                 (options.minyear && parsedYear < options.minyear) ||
                 (options.year && parsedYear !== options.year)
             ) return false;
         }
-    
-    
+
+
         if (options.maxwords || options.minwords || options.wordcount) {
             const wordCount = title.split(" ").length;
             if (
@@ -361,8 +376,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                 (options.wordcount && wordCount !== options.wordcount)
             ) return false;
         }
-    
-    
+
+
         if (options.maxeps || options.mineps || options.eps) {
             let episodeCount = getEpisodeCount(lastEpisode);
             if (
@@ -371,69 +386,108 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                 (options.eps && episodeCount !== options.eps)
             ) return false;
         }
-    
+
         return true;
     };
 
-    const searchQuery = rawQuery.replace(optionsRegexp, "").replace(/\s\s+/g, " ").trim();
-    const query = searchQuery.toLowerCase().replace(/[,.:;\-]/g, " ").replace(/\s\s+/g, " ").replace(/[^a-z\d\s]/g, "");
 
+    if (optionsRegexpMatches)
+        optionsRegexpMatches.forEach(optionMatch => {
+
+            if (optionMatch[5]) optionMatch[3] = optionMatch[5], optionMatch[4] = optionMatch[6];
+
+            const key = optionMatch[3].toLowerCase();
+
+            switch(key) {
+
+                case "sort":
+                case "orderby":
+                case "tagmode":
+                    options[key] = optionMatch[4].toLowerCase();
+                    break;
+
+                case "year":
+                    options[key] = optionMatch[4];
+                    break;
+
+                case "tags":
+                    optionMatch[4].toLocaleLowerCase("tr").split(",").forEach(tag => {
+                        if (tag.startsWith("!"))
+                            options["excludeTags"] = [...(options["excludeTags"] ?? []), tag.slice(1)]
+                        else
+                            options[key] = [...(options[key] ?? []), tag]
+                            // options[key].push(tag);
+                    })
+                    // options[key] = [...(options[key] ?? []), ...(optionMatch[4].toLocaleLowerCase("tr").split(","))];
+                    break;
+
+                default:
+                    options[key] = Number(optionMatch[4]);
+                    break;
+            }
+        });
+
+    const searchQuery = rawQuery.replace(optionsRegexp, "").replace(/\s\s+/g, " ").trim();
+    const query = searchQuery.toLowerCase().replace(/[^a-z\d\s]/g, "");
 
 
 
 
     /* options search */
 
-    if (searchQuery.length === 0) {
-        matchedAnimes = json.filter(
-            (anime) => 
+    if (searchQuery.replace(/[^a-z\d\s]/g, "").length === 0) {
+        if (!options.isEmpty()) {
+            matchedAnimes = json.filter(
+                (anime) => 
 
-                controllOptions(
-                    anime.info_titleoriginal,
-                    anime.info_year,
-                    anime.info_malpoint,
-                    anime.lastEpisode
-                )
+                    controllOptions(
+                        anime.info_titleoriginal,
+                        anime.info_year,
+                        anime.info_malpoint,
+                        anime.lastEpisode,
+                        anime.categories
+                    )
 
-        ).sort(
-            (a, b) => {
+            ).sort(
+                (a, b) => {
 
-                if (options.sort) {
+                    if (options.sort) {
 
-                    if (options.sort == "malp" && a.info_malpoint != undefined && b.info_malpoint != undefined) {
-                        if (options.orderby == "asc")
-                            return a.info_malpoint-b.info_malpoint;
-                        return b.info_malpoint-a.info_malpoint;
+                        if (options.sort == "malp" && a.info_malpoint != undefined && b.info_malpoint != undefined) {
+                            if (options.orderby == "asc")
+                                return a.info_malpoint-b.info_malpoint;
+                            return b.info_malpoint-a.info_malpoint;
+                        }
+                        if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
+                            let parsedYearA = parseYear(a.info_year);
+                            let parsedYearB = parseYear(b.info_year);
+
+                            if (options.orderby == "asc")
+                                return Number(parsedYearA)-Number(parsedYearB);
+                            return Number(parsedYearB)-Number(parsedYearA);
+                        }
+                        if (options.sort == "wordcount") {
+                            if (options.orderby == "asc")
+                                return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
+                            return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
+                        }
+                        if (options.sort == "epcount" && a.lastEpisode != undefined && b.lastEpisode != undefined) {
+                            if (options.orderby == "asc")
+                                return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
+                            return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
+                        }
                     }
-                    if (options.sort == "year" && a.info_year != undefined && b.info_year != undefined) {
-                        let parsedYearA = parseYear(a.info_year);
-                        let parsedYearB = parseYear(b.info_year);
 
-                        if (options.orderby == "asc")
-                            return Number(parsedYearA)-Number(parsedYearB);
-                        return Number(parsedYearB)-Number(parsedYearA);
-                    }
-                    if (options.sort == "wordcount") {
-                        if (options.orderby == "asc")
-                            return a.info_titleoriginal.split(" ").length-b.info_titleoriginal.split(" ").length;
-                        return b.info_titleoriginal.split(" ").length-a.info_titleoriginal.split(" ").length;
-                    }
-                    if (options.sort == "epcount" && a.lastEpisode != undefined && b.lastEpisode != undefined) {
-                        if (options.orderby == "asc")
-                            return getEpisodeCount(a.lastEpisode)-getEpisodeCount(b.lastEpisode);
-                        return getEpisodeCount(b.lastEpisode)-getEpisodeCount(a.lastEpisode);
-                    }
+                    if (options.orderby == "desc")
+                        return b.info_titleoriginal.localeCompare(a.info_titleoriginal);
+
+                    return a.info_titleoriginal.localeCompare(b.info_titleoriginal);
                 }
-
-                if (options.orderby == "desc")
-                    return b.info_titleoriginal.localeCompare(a.info_titleoriginal);
-
-                return a.info_titleoriginal.localeCompare(b.info_titleoriginal);
-            }
-        );
+            );
 
 
-        if (printMatchedAnimes(matchedAnimes, matchedAnimes.length)) return;
+            if (printMatchedAnimes(matchedAnimes, matchedAnimes.length)) return;
+        }
 
         messageFunc(noFoundMsg);
         return;
@@ -459,7 +513,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                         undefined,
                         anime.info_year,
                         anime.info_malpoint,
-                        anime.lastEpisode
+                        anime.lastEpisode,
+                        anime.categories
                     ))
 
         ).sort(
@@ -512,7 +567,7 @@ function search(rawQuery, messageFunc, noFoundMsg) {
 
 
     /* Search with title matches */
-    let findedIn = undefined;
+    let findedIn;
 
     matchedAnimes = json.filter(
         (anime) => {
@@ -529,11 +584,12 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleoriginal,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )
             ) {
 
-                if (!findedIn) findedIn = 0;
+                if (findedIn == undefined) findedIn = 0;
                 return true;
             }
 
@@ -549,11 +605,12 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleenglish,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )
             ) {
 
-                if (!findedIn) findedIn = 1;
+                if (findedIn == undefined) findedIn = 1;
                 return true;
             }
 
@@ -569,7 +626,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     undefined,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )
             ) {
 
@@ -588,7 +646,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     undefined,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )
             ) {
 
@@ -627,23 +686,23 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                 }
                 if (options.sort == "title") {
                     if (options.orderby == "desc")
-                        return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? b.info_titleoriginal.localeCompare(a.info_titleoriginal) : b.info_titleenglish.localeCompare(a.info_titleenglish);
-                    return (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish)) ? a.info_titleoriginal.localeCompare(b.info_titleoriginal) : a.info_titleenglish.localeCompare(b.info_titleenglish);
+                        return (findedIn === 1 && a.info_titleenglish && b.info_titleenglish) ? b.info_titleenglish.localeCompare(a.info_titleenglish) : b.info_titleoriginal.localeCompare(a.info_titleoriginal);
+                    return (findedIn === 1 && a.info_titleenglish && b.info_titleenglish) ? a.info_titleenglish.localeCompare(b.info_titleenglish) : a.info_titleoriginal.localeCompare(b.info_titleoriginal);
                 }
             }
 
             if (options.orderby == "desc") {
 
-                if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
-                    return b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                if (findedIn === 1 && a.info_titleenglish && b.info_titleenglish)
+                    return b.info_titleenglish.differenceCount(query) - a.info_titleenglish.differenceCount(query)
                 else
-                    return b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                    return b.info_titleoriginal.differenceCount(query) - a.info_titleoriginal.differenceCount(query)
             }
 
-            if (findedIn === 0 || (!a.info_titleenglish || !b.info_titleenglish))
-                return a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+            if (findedIn === 1 && a.info_titleenglish && b.info_titleenglish)
+                return a.info_titleenglish.differenceCount(query) - b.info_titleenglish.differenceCount(query)
             else
-                return a.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) - b.info_titleenglish.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                return a.info_titleoriginal.differenceCount(query) - b.info_titleoriginal.differenceCount(query)
         }
     );
 
@@ -664,6 +723,7 @@ function search(rawQuery, messageFunc, noFoundMsg) {
 
     let forcedKeywords = searchQuery
         .toLowerCase()
+        .replace(/[,.:;\-]/g, " ")
         .replace(/[^a-z\d"'\s]+/g, "")
         .match(/"[a-z\d\s']+"/g) || new Array();
 
@@ -720,13 +780,13 @@ function search(rawQuery, messageFunc, noFoundMsg) {
 
         if (options.orderby == "desc")
             return (
-                b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) -
-                a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+                b.info_titleoriginal.differenceCount(query) -
+                a.info_titleoriginal.differenceCount(query)
             );
 
         return (
-            a.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query) -
-            b.info_titleoriginal.toLowerCase().replace(/[^a-z\d\s]/g, "").differenceCount(query)
+            a.info_titleoriginal.differenceCount(query) -
+            b.info_titleoriginal.differenceCount(query)
         );
     });
 
@@ -751,7 +811,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleoriginal,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )) ||
 
             (anime.info_titleenglish &&
@@ -771,7 +832,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     anime.info_titleenglish,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )) ||
 
             (anime.info_othernames &&
@@ -791,7 +853,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                     undefined,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 ))
     ));
 
@@ -805,68 +868,113 @@ function search(rawQuery, messageFunc, noFoundMsg) {
 
             (anime.info_titleoriginal &&
                 (
-                    normalKeywords.length == 0 ||
-                    normalKeywords.some(el =>
-                        anime.info_titleoriginal
-                            .toLowerCase()
-                            .replace(/[^a-z\d\s]/g, "")
-                            .includes(el))
-                ) &&
-                forcedKeywords.every(el =>
-                    anime.info_titleoriginal
-                        .toLowerCase()
-                        .replace(/[^a-z\d\s]/g, "")
-                        .includes(prepareKeyword(el))
+                    (
+                        normalKeywords.length == 0 &&
+                        forcedKeywords.length !== 0 &&
+                        forcedKeywords.every(el =>
+                            anime.info_titleoriginal
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    ) ||
+                    (
+                        (
+                            normalKeywords.length !== 0 &&
+                            normalKeywords.some(el =>
+                                anime.info_titleoriginal
+                                    .toLowerCase()
+                                    .replace(/[^a-z\d\s]/g, "")
+                                    .includes(el))
+                        ) ||
+                        forcedKeywords.every(el =>
+                            anime.info_titleoriginal
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    )
                 ) &&
                 controllOptions(
                     anime.info_titleoriginal,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )) ||
 
             (anime.info_titleenglish &&
                 (
-                    normalKeywords.length == 0 ||
-                    normalKeywords.some(el =>
-                        anime.info_titleenglish
-                            .toLowerCase()
-                            .replace(/[^a-z\d\s]/g, "")
-                            .includes(el))
-                ) &&
-                forcedKeywords.every(el =>
-                    anime.info_titleenglish
-                        .toLowerCase()
-                        .replace(/[^a-z\d\s]/g, "")
-                        .includes(prepareKeyword(el))
+                    (
+                        normalKeywords.length == 0 &&
+                        forcedKeywords.length !== 0 &&
+                        forcedKeywords.every(el =>
+                            anime.info_titleenglish
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    ) ||
+                    (
+                        (
+                            normalKeywords.length !== 0 &&
+                            normalKeywords.some(el =>
+                                anime.info_titleenglish
+                                    .toLowerCase()
+                                    .replace(/[^a-z\d\s]/g, "")
+                                    .includes(el))
+                        ) ||
+                        forcedKeywords.every(el =>
+                            anime.info_titleenglish
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    )
                 ) &&
                 controllOptions(
                     anime.info_titleenglish,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 )) ||
 
             (anime.info_othernames &&
                 (
-                    normalKeywords.length == 0 ||
-                    normalKeywords.some(el =>
-                        anime.info_othernames
-                            .toLowerCase()
-                            .replace(/[^a-z\d\s]/g, "")
-                            .includes(el))
-                ) &&
-                forcedKeywords.every(el =>
-                    anime.info_othernames
-                        .toLowerCase()
-                        .replace(/[^a-z\d\s]/g, "")
-                        .includes(prepareKeyword(el))
+                    (
+                        normalKeywords.length == 0 &&
+                        forcedKeywords.length !== 0 &&
+                        forcedKeywords.every(el =>
+                            anime.info_othernames
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    ) ||
+                    (
+                        (
+                            normalKeywords.length !== 0 &&
+                            normalKeywords.some(el =>
+                                anime.info_othernames
+                                    .toLowerCase()
+                                    .replace(/[^a-z\d\s]/g, "")
+                                    .includes(el))
+                        ) ||
+                        forcedKeywords.every(el =>
+                            anime.info_othernames
+                                .toLowerCase()
+                                .replace(/[^a-z\d\s]/g, "")
+                                .includes(prepareKeyword(el))
+                        )
+                    )
                 ) &&
                 controllOptions(
                     undefined,
                     anime.info_year,
                     anime.info_malpoint,
-                    anime.lastEpisode
+                    anime.lastEpisode,
+                    anime.categories
                 ))
     ));
 
@@ -894,7 +1002,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                         anime.info_titleoriginal,
                         anime.info_year,
                         anime.info_malpoint,
-                        anime.lastEpisode
+                        anime.lastEpisode,
+                        anime.categories
                     )) ||
 
                 (anime.info_titleenglish &&
@@ -906,7 +1015,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                         anime.info_titleenglish,
                         anime.info_year,
                         anime.info_malpoint,
-                        anime.lastEpisode
+                        anime.lastEpisode,
+                        anime.categories
                     )) ||
 
                 (anime.info_othernames &&
@@ -918,7 +1028,8 @@ function search(rawQuery, messageFunc, noFoundMsg) {
                         undefined,
                         anime.info_year,
                         anime.info_malpoint,
-                        anime.lastEpisode
+                        anime.lastEpisode,
+                        anime.categories
                     ))
 
         ).sort(
@@ -988,7 +1099,7 @@ searchBtn.addEventListener("click", () => {
     if (params.get("engtitle"))
         parameters += "engtitle=" + engTitleByDef.toString() + "&";
 
-    location.search = "?" + parameters + "q=" + encodeURI(queryInput.value);
+    location.search = "?" + parameters + "q=" + encodeURIComponent(queryInput.value);
 
 });
 
@@ -1040,19 +1151,16 @@ window.addEventListener("scroll", () => {
 
             printCards(overflowAnimeJsons);
             overflowAnimeJsons = {};
-
-            footer.style.display = "flex";
-
         }
 
     }
 
     if (html.scrollTop >= window.innerHeight) {
 
-        if (main.clientHeight - html.scrollTop - html.clientHeight < footer.clientHeight)
+        if (main.clientHeight - html.scrollTop - html.clientHeight < 0)
             scrollToTop.style.bottom = "calc(" +
                 (
-                    footer.clientHeight -
+                    0 -
                     (
                         main.clientHeight -
                         html.scrollTop -
@@ -1102,7 +1210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } else {
         
-        const query = decodeURI(params.get("q"));
+        const query = decodeURIComponent(params.get("q"));
 
         document.title = query + " - Anizm arama";
 
@@ -1111,7 +1219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         showMessage("Veri tabanı yükleniyor...", true);
 
-        const req = await fetch("https://anizm.net/getAnimeListForSearch");
+        const req = await fetch("https://anizm.pro/getAnimeListForSearch");
         json = await req.json();
 
         showMessage("Aranıyor...", true);
